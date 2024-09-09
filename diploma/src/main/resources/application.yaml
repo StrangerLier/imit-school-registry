@@ -1,6 +1,10 @@
 server:
     port: 9000
 
+security:
+    basic:
+        enable: false
+
 spring:
     application:
         name: imit.school.registry
