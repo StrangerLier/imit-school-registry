@@ -9,5 +9,7 @@ CREATE TABLE child
     school varchar(255),
     class_number varchar(2),
     email varchar(100),
+    group_type varchar(100),
+    status varchar(100),
     phone varchar(100)
 );

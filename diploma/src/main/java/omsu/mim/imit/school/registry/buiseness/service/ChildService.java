@@ -1,8 +1,10 @@
 package omsu.mim.imit.school.registry.buiseness.service;
 
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import omsu.mim.imit.school.registry.data.entity.ChildEntity;
+import omsu.mim.imit.school.registry.data.entity.enumeration.ChildStatus;
 import omsu.mim.imit.school.registry.data.repository.ChildRepository;
 import omsu.mim.imit.school.registry.rest.dto.request.FilterChildrenRequestDto;
 import omsu.mim.imit.school.registry.rest.dto.response.ChildRestResponse;
@@ -28,5 +30,14 @@ public class ChildService {
             request.getSurname(),
             request.getSchool()
         ));
+    }
+
+    public ChildRestResponse deleteById(UUID id) {
+        var child = repository.findById(id).get();
+
+        child.setStatus(ChildStatus.ARCHIVED);
+        repository.save(child);
+
+        return childRestResponseMapper.map(child);
     }
 }

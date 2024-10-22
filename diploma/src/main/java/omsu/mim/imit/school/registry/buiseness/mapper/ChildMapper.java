@@ -16,5 +16,6 @@ import org.mapstruct.ReportingPolicy;
 public interface ChildMapper {
 
     @Mapping(target = "id", expression = ("java(UUID.randomUUID())"))
+    @Mapping(target = "status", ignore = true)
     ChildEntity map(ChildRequestDto dto);
 }

@@ -2,6 +2,8 @@ package omsu.mim.imit.school.registry.data.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -10,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import omsu.mim.imit.school.registry.data.entity.enumeration.ChildStatus;
 
 @Getter
 @Setter
@@ -49,4 +52,11 @@ public class ChildEntity {
 
     @Column(name = "phone")
     private String phone;
+
+    @Column(name = "group_type")
+    private String group;
+
+    @Column(name = "status")
+    @Enumerated(value = EnumType.STRING)
+    private ChildStatus status = ChildStatus.NEW;
 }

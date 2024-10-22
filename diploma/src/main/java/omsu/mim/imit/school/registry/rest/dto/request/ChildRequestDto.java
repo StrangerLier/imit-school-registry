@@ -31,4 +31,5 @@ public class ChildRequestDto {
     private String email;
 
     private String phone;
+    private String group;
 }
