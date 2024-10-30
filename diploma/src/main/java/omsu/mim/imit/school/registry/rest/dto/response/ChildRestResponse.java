@@ -33,4 +33,5 @@ public class ChildRestResponse {
     private String email;
 
     private String phone;
+    private Boolean isActive;
 }

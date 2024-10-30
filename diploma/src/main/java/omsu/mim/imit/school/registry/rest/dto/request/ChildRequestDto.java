@@ -1,6 +1,7 @@
 package omsu.mim.imit.school.registry.rest.dto.request;
 
 import java.time.LocalDate;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,5 +32,5 @@ public class ChildRequestDto {
     private String email;
 
     private String phone;
-    private String group;
+    private UUID groupId;
 }

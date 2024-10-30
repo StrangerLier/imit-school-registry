@@ -2,6 +2,7 @@ package omsu.mim.imit.school.registry.rest.dto.request;
 
 import io.micrometer.common.util.StringUtils;
 import java.time.LocalDate;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class FilterChildrenRequestDto {
     private LocalDate birthDate;
     private String surname;
     private String school;
+    private UUID groupId;
 
     public void correctParams() {
         if (StringUtils.isEmpty(classNumber)) {

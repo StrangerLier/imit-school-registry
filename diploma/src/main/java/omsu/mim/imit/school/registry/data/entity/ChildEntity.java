@@ -53,10 +53,10 @@ public class ChildEntity {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "group_type")
-    private String group;
-
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
     private ChildStatus status = ChildStatus.NEW;
+
+    @Column(name = "group_id")
+    private UUID groupId;
 }

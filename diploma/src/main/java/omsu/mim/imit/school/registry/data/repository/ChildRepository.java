@@ -14,9 +14,11 @@ public interface ChildRepository extends JpaRepository<ChildEntity, UUID> {
         + "where (:classNumber is null or c.classNumber = :classNumber) "
         + "and (:birthDate is null or c.birthDate = :birthDate) "
         + "and (:surname is null or c.surname = :surname) "
-        + "and (:school is null or c.school = :school)")
+        + "and (:school is null or c.school = :school)"
+        + "and (:groupId is null or c.groupId = :groupId)")
     List<ChildEntity> filter(@Param("classNumber") String classNumber,
-                               @Param("birthDate") LocalDate birthDate,
-                               @Param("surname") String surname,
-                               @Param("school") String school);
+                             @Param("birthDate") LocalDate birthDate,
+                             @Param("surname") String surname,
+                             @Param("school") String school,
+                             @Param("groupId") UUID groupId);
 }

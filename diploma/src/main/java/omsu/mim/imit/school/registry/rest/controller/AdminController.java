@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +30,17 @@ public class AdminController {
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ChildRestResponse> delete(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.deleteById(id));
+    }
+
+    @PostMapping("/admin/v1/activateChildren")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ChildRestResponse> activateChildren(@RequestParam UUID id) {
+        return ResponseEntity.ok(childService.activate(id));
+    }
+
+    @PostMapping("/admin/v1/deactivateChildren")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ChildRestResponse> deactivateChildren(@RequestParam UUID id) {
+        return ResponseEntity.ok(childService.deactivate(id));
     }
 }

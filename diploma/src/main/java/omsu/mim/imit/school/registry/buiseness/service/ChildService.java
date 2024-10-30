@@ -28,11 +28,36 @@ public class ChildService {
             request.getClassNumber(),
             request.getBirthDate(),
             request.getSurname(),
-            request.getSchool()
+            request.getSchool(),
+            request.getGroupId()
         ));
     }
 
     public ChildRestResponse deleteById(UUID id) {
+        var child = repository.findById(id).get();
+
+        child.setStatus(ChildStatus.ARCHIVED);
+        repository.save(child);
+
+        return childRestResponseMapper.map(child);
+    }
+
+    public ChildRestResponse activate(UUID id) {
+        var child = repository.findById(id).get();
+
+        if (!child.getStatus().equals(ChildStatus.ACTIVE)) {
+            child.setStatus(ChildStatus.ACTIVE);
+        } else {
+            child.setStatus(ChildStatus.ARCHIVED);
+        }
+
+        child.setStatus(ChildStatus.ACTIVE);
+        repository.save(child);
+
+        return childRestResponseMapper.map(child);
+    }
+
+    public ChildRestResponse deactivate(UUID id) {
         var child = repository.findById(id).get();
 
         child.setStatus(ChildStatus.ARCHIVED);
