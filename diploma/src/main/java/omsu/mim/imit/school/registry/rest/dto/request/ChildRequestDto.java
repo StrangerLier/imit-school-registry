@@ -33,4 +33,10 @@ public class ChildRequestDto {
 
     private String phone;
     private UUID groupId;
+
+    private String parentPhone;
+
+    private String parent;
+
+    private String skills;
 }

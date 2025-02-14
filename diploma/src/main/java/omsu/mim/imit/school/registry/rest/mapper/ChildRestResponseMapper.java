@@ -18,11 +18,11 @@ public interface ChildRestResponseMapper {
 
     List<ChildRestResponse> mapAll(List<ChildEntity> entities);
 
-    @Mapping(target = "isActive", source = "status", qualifiedByName = "isStatusActive")
+    @Mapping(target = "isActive", source = "status", qualifiedByName = "isStatusApproved")
     ChildRestResponse map(ChildEntity entity);
 
-    @Named("isStatusActive")
-    static Boolean isStatusActive(ChildStatus status) {
-        return ChildStatus.ACTIVE.equals(status);
+    @Named("isStatusApproved")
+    static Boolean isStatusApproved(ChildStatus status) {
+        return ChildStatus.APPROVED.equals(status);
     }
 }

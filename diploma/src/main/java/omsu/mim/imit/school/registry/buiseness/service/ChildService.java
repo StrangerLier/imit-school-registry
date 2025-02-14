@@ -1,11 +1,13 @@
 package omsu.mim.imit.school.registry.buiseness.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import omsu.mim.imit.school.registry.data.entity.ChildEntity;
 import omsu.mim.imit.school.registry.data.entity.enumeration.ChildStatus;
 import omsu.mim.imit.school.registry.data.repository.ChildRepository;
+import omsu.mim.imit.school.registry.rest.dto.request.ChildRequestDto;
 import omsu.mim.imit.school.registry.rest.dto.request.FilterChildrenRequestDto;
 import omsu.mim.imit.school.registry.rest.dto.response.ChildRestResponse;
 import omsu.mim.imit.school.registry.rest.mapper.ChildRestResponseMapper;
@@ -23,7 +25,6 @@ public class ChildService {
     }
 
     public List<ChildRestResponse> filter(FilterChildrenRequestDto request) {
-
         return childRestResponseMapper.mapAll(repository.filter(
             request.getClassNumber(),
             request.getBirthDate(),
@@ -42,27 +43,22 @@ public class ChildService {
         return childRestResponseMapper.map(child);
     }
 
-    public ChildRestResponse activate(UUID id) {
+    public ChildRestResponse changeStatus(UUID id, ChildStatus status) {
         var child = repository.findById(id).get();
 
-        if (!child.getStatus().equals(ChildStatus.ACTIVE)) {
-            child.setStatus(ChildStatus.ACTIVE);
-        } else {
-            child.setStatus(ChildStatus.ARCHIVED);
-        }
-
-        child.setStatus(ChildStatus.ACTIVE);
+        child.setStatus(status);
         repository.save(child);
 
         return childRestResponseMapper.map(child);
     }
 
-    public ChildRestResponse deactivate(UUID id) {
-        var child = repository.findById(id).get();
-
-        child.setStatus(ChildStatus.ARCHIVED);
-        repository.save(child);
-
-        return childRestResponseMapper.map(child);
+    public Optional<ChildEntity> findDuplicate(ChildRequestDto request) {
+        return repository.findForDuble(
+            request.getName(),
+            request.getSecondName(),
+            request.getSurname(),
+            request.getBirthDate(),
+            request.getGroupId()
+            );
     }
 }

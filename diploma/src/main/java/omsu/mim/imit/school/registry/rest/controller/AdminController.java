@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import omsu.mim.imit.school.registry.buiseness.service.ChildService;
+import omsu.mim.imit.school.registry.data.entity.enumeration.ChildStatus;
 import omsu.mim.imit.school.registry.rest.dto.request.FilterChildrenRequestDto;
 import omsu.mim.imit.school.registry.rest.dto.response.ChildRestResponse;
 import org.springframework.http.ResponseEntity;
@@ -32,15 +33,15 @@ public class AdminController {
         return ResponseEntity.ok(childService.deleteById(id));
     }
 
-    @PostMapping("/admin/v1/activateChildren")
-    @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ChildRestResponse> activateChildren(@RequestParam UUID id) {
-        return ResponseEntity.ok(childService.activate(id));
-    }
-
     @PostMapping("/admin/v1/deactivateChildren")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ChildRestResponse> deactivateChildren(@RequestParam UUID id) {
-        return ResponseEntity.ok(childService.deactivate(id));
+    public ResponseEntity<ChildRestResponse> activateChildren(@RequestParam UUID id) {
+        return ResponseEntity.ok(childService.changeStatus(id, ChildStatus.APPROVED));
+    }
+
+    @PostMapping("/admin/v1/changeStatus")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ChildRestResponse> deactivateChildren(@RequestParam UUID id, @RequestParam ChildStatus status) {
+        return ResponseEntity.ok(childService.changeStatus(id, status));
     }
 }

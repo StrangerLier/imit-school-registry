@@ -2,6 +2,7 @@ package omsu.mim.imit.school.registry.rest.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import omsu.mim.imit.school.registry.buiseness.manager.ApproveChildManager;
 import omsu.mim.imit.school.registry.buiseness.mapper.ChildMapper;
 import omsu.mim.imit.school.registry.buiseness.service.ChildService;
 import omsu.mim.imit.school.registry.rest.dto.request.ChildRequestDto;
@@ -18,11 +19,12 @@ public class ClientController {
 
     private final ChildService service;
     private final ChildMapper mapper;
+    private final ApproveChildManager approveChildManager;
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/v1/registerChild")
     public void register(@RequestBody ChildRequestDto request) {
-        service.save(mapper.map(request));
+        approveChildManager.manage(request);
     }
 
     @GetMapping("/v1/test")

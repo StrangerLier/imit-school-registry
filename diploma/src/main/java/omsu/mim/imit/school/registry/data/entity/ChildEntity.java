@@ -59,4 +59,13 @@ public class ChildEntity {
 
     @Column(name = "group_id")
     private UUID groupId;
+
+    @Column(name = "parent_phone")
+    private String parentPhone;
+
+    @Column(name = "parent")
+    private String parent;
+
+    @Column(name = "skills")
+    private String skills;
 }
