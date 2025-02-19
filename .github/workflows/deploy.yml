@@ -22,10 +22,10 @@ jobs:
           SOURCE: '.'
           TARGET: '~/web/backend'
 
-      - name: ls -a via ssh
+      - name: Rebuild & Redeploy
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: "cd web && docker compose down && docker compose up -d"
+          command: "cd web && docker compose build && docker compose down && docker compose up -d"
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           port: ${{ secrets.REMOTE_PORT }}
