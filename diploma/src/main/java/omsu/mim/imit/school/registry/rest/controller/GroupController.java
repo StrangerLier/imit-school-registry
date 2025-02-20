@@ -8,6 +8,7 @@ import omsu.mim.imit.school.registry.rest.dto.request.CreateGroupRequest;
 import omsu.mim.imit.school.registry.rest.dto.response.GroupRestResponse;
 import omsu.mim.imit.school.registry.rest.mapper.GroupRestResponseMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,11 +23,13 @@ public class GroupController {
     private final GroupRestResponseMapper groupRestResponseMapper;
 
     @PostMapping("/group/v1/create")
+    @CrossOrigin("https://dipapi.rkkm.space")
     public void filter(@RequestBody CreateGroupRequest request) {
         service.create(groupMapper.map(request));
     }
 
     @GetMapping("/group/v1")
+    @CrossOrigin("https://dipapi.rkkm.space")
     public ResponseEntity<List<GroupRestResponse>> filter() {
         return ResponseEntity.ok(groupRestResponseMapper.mapAll(service.findAll()));
     }
