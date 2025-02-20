@@ -15,7 +15,6 @@ public class ApproveChildManager {
     private final GroupService groupService;
     private final ChildService childService;
     private final ChildMapper childMapper;
-
     public void manage(ChildRequestDto request) {
         var group = groupService.findById(request.getGroupId());
         validateRequest(request, group);
@@ -26,16 +25,14 @@ public class ApproveChildManager {
         if (isNoSlot(group)) {
             throw new RuntimeException("Группа заполнена.");
         }
-
-        if (isDuplicate(request)) {
-            throw new RuntimeException("Ребенок '%s' '%s' '%s', уже записан на направление: '%s'".formatted(
-                request.getName(),
-                request.getSurname(),
-                request.getSecondName(),
-                group.getDirection()
-            ));
-        }
-
+//        if (isDuplicate(request)) {
+//            throw new RuntimeException("Ребенок '%s' '%s' '%s', уже записан на направление: '%s'".formatted(
+//                request.getName(),
+//                request.getSurname(),
+//                request.getSecondName(),
+//                group.getDirection()
+//            ));
+//        }
     }
 
     private boolean isNoSlot(GroupEntity group) {
