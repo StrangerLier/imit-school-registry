@@ -32,13 +32,11 @@ public class AdminController {
     }
 
     @PostMapping("/admin/v1/deactivateChildren")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ChildRestResponse> activateChildren(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.changeStatus(id, ChildStatus.APPROVED));
     }
 
     @PostMapping("/admin/v1/changeStatus")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ChildRestResponse> deactivateChildren(@RequestParam UUID id, @RequestParam ChildStatus status) {
         return ResponseEntity.ok(childService.changeStatus(id, status));
     }
