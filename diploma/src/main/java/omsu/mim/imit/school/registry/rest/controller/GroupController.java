@@ -23,13 +23,13 @@ public class GroupController {
     private final GroupRestResponseMapper groupRestResponseMapper;
 
     @PostMapping("/group/v1/create")
-    @CrossOrigin(origins = "https://dipapi.rkkm.space")
+    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public void filter(@RequestBody CreateGroupRequest request) {
         service.create(groupMapper.map(request));
     }
 
     @GetMapping("/group/v1")
-    @CrossOrigin(origins = "https://dipapi.rkkm.space")
+    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public ResponseEntity<List<GroupRestResponse>> filter() {
         return ResponseEntity.ok(groupRestResponseMapper.mapAll(service.findAll()));
     }
