@@ -21,6 +21,7 @@ public class AdminController {
     private final ChildService childService;
 
     @GetMapping("/admin/v1/filter")
+    @CrossOrigin
     public ResponseEntity<List<ChildRestResponse>> filter(FilterChildrenRequestDto request) {
         request.correctParams();
         return ResponseEntity.ok(childService.filter(request));
@@ -32,11 +33,13 @@ public class AdminController {
     }
 
     @PostMapping("/admin/v1/deactivateChildren")
+    @CrossOrigin
     public ResponseEntity<ChildRestResponse> activateChildren(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.changeStatus(id, ChildStatus.APPROVED));
     }
 
     @PostMapping("/admin/v1/changeStatus")
+    @CrossOrigin
     public ResponseEntity<ChildRestResponse> deactivateChildren(@RequestParam UUID id, @RequestParam ChildStatus status) {
         return ResponseEntity.ok(childService.changeStatus(id, status));
     }
