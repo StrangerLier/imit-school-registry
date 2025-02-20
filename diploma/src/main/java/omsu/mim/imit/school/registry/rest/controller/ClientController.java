@@ -21,13 +21,13 @@ public class ClientController {
     private final ChildMapper mapper;
     private final ApproveChildManager approveChildManager;
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     @PostMapping("/v1/registerChild")
     public void register(@RequestBody ChildRequestDto request) {
         approveChildManager.manage(request);
     }
 
-    @GetMapping("/v1/test")
+    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public String test() {
         return "test";
     }
