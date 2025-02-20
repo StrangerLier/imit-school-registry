@@ -21,7 +21,6 @@ public class AdminController {
     private final ChildService childService;
 
     @GetMapping("/admin/v1/filter")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<ChildRestResponse>> filter(FilterChildrenRequestDto request) {
         request.correctParams();
         return ResponseEntity.ok(childService.filter(request));
