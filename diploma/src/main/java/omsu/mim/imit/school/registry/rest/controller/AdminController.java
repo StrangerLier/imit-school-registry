@@ -28,7 +28,6 @@ public class AdminController {
     }
 
     @DeleteMapping("/admin/v1/delete")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ChildRestResponse> delete(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.deleteById(id));
     }
