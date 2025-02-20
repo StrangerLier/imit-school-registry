@@ -25,7 +25,7 @@ public interface ChildRepository extends JpaRepository<ChildEntity, UUID> {
 
     @Query("select c from child c "
         + "where (:name is null or c.name = :name) "
-        + "and (:secondName is null or c.birthDate = :secondName) "
+        + "and (:secondName is null or c.secondName = :secondName) "
         + "and (:surname is null or c.surname = :surname) "
         + "and (:birthDate is null or c.birthDate = :birthDate) "
         + "and (:groupId is null or c.groupId = :groupId)")

@@ -16,7 +16,6 @@ public class ApproveChildManager {
     private final ChildService childService;
     private final ChildMapper childMapper;
 
-
     public void manage(ChildRequestDto request) {
         var group = groupService.findById(request.getGroupId());
         validateRequest(request, group);
