@@ -23,13 +23,13 @@ public class GroupController {
     private final GroupRestResponseMapper groupRestResponseMapper;
 
     @PostMapping("/group/v1/create")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     public void filter(@RequestBody CreateGroupRequest request) {
         service.create(groupMapper.map(request));
     }
 
     @GetMapping("/group/v1")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     public ResponseEntity<List<GroupRestResponse>> filter() {
         return ResponseEntity.ok(groupRestResponseMapper.mapAll(service.findAll()));
     }
