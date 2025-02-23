@@ -23,13 +23,18 @@ public interface ChildRepository extends JpaRepository<ChildEntity, UUID> {
                              @Param("school") String school,
                              @Param("groupId") UUID groupId);
 
-    @Query("select c from child c "
-        + "where (:name is null or c.name = :name) "
-        + "and (:secondName is null or c.secondName = :secondName) "
-        + "and (:surname is null or c.surname = :surname) "
-        + "and (:birthDate is null or c.birthDate = :birthDate) "
-        + "and (:groupId is null or c.groupId = :groupId)")
-    Optional<ChildEntity> findForDuble(@Param("name") String name,
+    @Query("""
+            select c 
+            from child c join group_info g on c.group_id = g.id
+                where (:name is null or c.name = :name)
+                and (:secondName is null or c.secondName = :secondName)
+                and (:surname is null or c.surname = :surname)
+                and (:birthDate is null or c.birthDate = :birthDate)
+                and (
+                    g.direction
+                    )
+    """)
+    List<ChildEntity> findForDuble(@Param("name") String name,
                                  @Param("secondName") String secondName,
                                  @Param("surname") String surname,
                                  @Param("birthDate") LocalDate birthDate,

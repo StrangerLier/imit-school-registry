@@ -52,13 +52,17 @@ public class ChildService {
         return childRestResponseMapper.map(child);
     }
 
-    public Optional<ChildEntity> findDuplicate(ChildRequestDto request) {
+    public List<ChildEntity> findDuplicates(ChildRequestDto request) {
         return repository.findForDuble(
-            request.getName(),
-            request.getSecondName(),
-            request.getSurname(),
-            request.getBirthDate(),
-            request.getGroupId()
+                request.getName(),
+                request.getSecondName(),
+                request.getSurname(),
+                request.getBirthDate(),
+                request.getGroupId()
             );
+    }
+
+    public void setDuplicateKey(ChildEntity childEntity) {
+        repository.save(childEntity);
     }
 }
