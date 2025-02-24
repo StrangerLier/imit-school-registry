@@ -28,15 +28,15 @@ public class ApproveChildManager {
             throw new RuntimeException("Группа заполнена.");
         }
 
-        checkForDuplicate(request);
+        checkForDuplicate(request, group);
     }
 
     private boolean isNoSlot(GroupEntity group) {
         return group.getApprovedListeners() + 1 > group.getListenersAmount();
     }
 
-    private void checkForDuplicate(ChildRequestDto request) {
-        var duplicates = childService.findDuplicates(request);
+    private void checkForDuplicate(ChildRequestDto request, GroupEntity group) {
+        var duplicates = childService.findDuplicates(request, group);
 
         if (duplicates.isEmpty()) {
             return;
