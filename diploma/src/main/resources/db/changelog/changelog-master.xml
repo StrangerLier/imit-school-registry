@@ -6,4 +6,5 @@
     <include file="sql/2_create_table_group.sql" relativeToChangelogFile="true" />
     <include file="sql/3_alter_table_child_add_column_group_id.sql" relativeToChangelogFile="true" />
     <include file="sql/4_alter_table_child_add_columns.sql" relativeToChangelogFile="true" />
+    <include file="sql/5_alter_table_child_add_duplicates_info.sql" relativeToChangelogFile="true" />
 </databaseChangeLog>

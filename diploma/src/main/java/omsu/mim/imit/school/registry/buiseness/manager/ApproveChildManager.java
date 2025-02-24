@@ -1,9 +1,11 @@
 package omsu.mim.imit.school.registry.buiseness.manager;
 
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import omsu.mim.imit.school.registry.buiseness.mapper.ChildMapper;
 import omsu.mim.imit.school.registry.buiseness.service.ChildService;
 import omsu.mim.imit.school.registry.buiseness.service.GroupService;
+import omsu.mim.imit.school.registry.data.entity.ChildEntity;
 import omsu.mim.imit.school.registry.data.entity.GroupEntity;
 import omsu.mim.imit.school.registry.rest.dto.request.ChildRequestDto;
 import org.springframework.stereotype.Service;
@@ -25,23 +27,34 @@ public class ApproveChildManager {
         if (isNoSlot(group)) {
             throw new RuntimeException("Группа заполнена.");
         }
-//        if (isDuplicate(request)) {
-//            throw new RuntimeException("Ребенок '%s' '%s' '%s', уже записан на направление: '%s'".formatted(
-//                request.getName(),
-//                request.getSurname(),
-//                request.getSecondName(),
-//                group.getDirection()
-//            ));
-//        }
+
+        checkForDuplicate(request, group);
     }
 
     private boolean isNoSlot(GroupEntity group) {
         return group.getApprovedListeners() + 1 > group.getListenersAmount();
     }
 
-    private boolean isDuplicate(ChildRequestDto request) {
-        var child = childService.findDuplicate(request);
+    private void checkForDuplicate(ChildRequestDto request, GroupEntity group) {
+        var duplicates = childService.findDuplicates(request, group);
 
-        return child.isPresent();
+        if (duplicates.isEmpty()) {
+            return;
+        }
+
+        var duplicateKey = getDuplicateKey(request);
+
+        for(ChildEntity duplicate : duplicates) {
+            if (StringUtils.isBlank(duplicate.getDuplicateKey())) {
+                duplicate.setDuplicateKey(duplicateKey);
+                childService.setDuplicateKey(duplicate);
+            }
+        }
+
+        request.setDuplicateKey(duplicateKey);
+    }
+
+    private String getDuplicateKey(ChildRequestDto request) {
+        return request.getName() + request.getSurname() + request.getSecondName() + request.getBirthDate();
     }
 }

@@ -15,6 +15,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class ChildRestResponse {
 
     private UUID id;
+    private UUID groupId;
+
     private String name;
 
     private String secondName;
@@ -33,5 +35,8 @@ public class ChildRestResponse {
     private String email;
 
     private String phone;
+
     private Boolean isActive;
+
+    private String duplicateKey;
 }

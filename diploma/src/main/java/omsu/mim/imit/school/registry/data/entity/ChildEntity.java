@@ -68,4 +68,7 @@ public class ChildEntity {
 
     @Column(name = "skills")
     private String skills;
+
+    @Column(name = "duplicate_key")
+    private String duplicateKey;
 }

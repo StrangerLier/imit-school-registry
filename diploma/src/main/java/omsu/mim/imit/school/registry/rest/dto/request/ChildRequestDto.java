@@ -32,6 +32,7 @@ public class ChildRequestDto {
     private String email;
 
     private String phone;
+
     private UUID groupId;
 
     private String parentPhone;
@@ -39,4 +40,6 @@ public class ChildRequestDto {
     private String parent;
 
     private String skills;
+
+    private String duplicateKey;
 }
