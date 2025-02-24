@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,6 @@ public class ChildService {
     }
 
     public List<ChildRestResponse> filter(FilterChildrenRequestDto request) {
-
         var filtered = childRestResponseMapper.mapAll(childRepository.filter(
                 request.getClassNumber(),
                 request.getBirthDate(),
@@ -49,7 +49,7 @@ public class ChildService {
         var filteredGroupsMap = filteredGroups.stream()
                     .collect(Collectors.toMap(GroupEntity::getId, Function.identity()));
 
-        return filtered.stream()
+        var duplicatesStream = filtered.stream()
                 .filter(v -> !StringUtils.isBlank(v.getDuplicateKey()))
                 .flatMap(response -> {
                     var group = filteredGroupsMap.get(response.getGroupId());
@@ -63,8 +63,12 @@ public class ChildService {
                     );
                     return childRestResponseMapper.mapAll(duplicates).stream();
                 })
+                .distinct();
+
+        return Stream.concat(filtered.stream(), duplicatesStream)
                 .distinct()
                 .toList();
+
     }
 
     public ChildRestResponse deleteById(UUID id) {
