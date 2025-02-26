@@ -26,4 +26,8 @@ public class GroupService {
         return repository.findById(groupId)
             .orElseThrow(() -> new ObjectNotFoundException("Group with id '%s' is not found".formatted(groupId)));
     }
+
+    public void increaseListener(UUID groupId) {
+        repository.increaseListenersAmount(groupId);
+    }
 }
