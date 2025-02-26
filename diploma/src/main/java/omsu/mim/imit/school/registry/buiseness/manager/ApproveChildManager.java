@@ -9,6 +9,7 @@ import omsu.mim.imit.school.registry.data.entity.ChildEntity;
 import omsu.mim.imit.school.registry.data.entity.GroupEntity;
 import omsu.mim.imit.school.registry.rest.dto.request.ChildRequestDto;
 import org.springframework.stereotype.Service;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,9 @@ public class ApproveChildManager {
 
     private void validateRequest(ChildRequestDto request, GroupEntity group) {
         if (isNoSlot(group)) {
-            throw new RuntimeException("Группа заполнена.");
+            request.setGroupId(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+        } else {
+            groupService.increaseListener(group.getId());
         }
 
         checkForDuplicate(request, group);
