@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,8 +28,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/admin/v1/delete")
-    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"},
-            methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.OPTIONS})
+    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public ResponseEntity<ChildRestResponse> delete(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.deleteById(id));
     }
