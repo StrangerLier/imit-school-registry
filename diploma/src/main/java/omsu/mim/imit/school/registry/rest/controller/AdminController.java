@@ -30,7 +30,7 @@ public class AdminController {
 
     @DeleteMapping("/admin/v1/delete")
     @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"},
-            methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
+            methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.OPTIONS})
     public ResponseEntity<ChildRestResponse> delete(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.deleteById(id));
     }
