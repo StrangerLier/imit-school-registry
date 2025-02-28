@@ -27,7 +27,7 @@ public class AdminController {
         return ResponseEntity.ok(childService.filter(request));
     }
 
-    @PostMapping("/admin/v1/delete")
+    @DeleteMapping("/admin/v1/delete")
     @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public ResponseEntity<ChildRestResponse> delete(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.deleteById(id));
