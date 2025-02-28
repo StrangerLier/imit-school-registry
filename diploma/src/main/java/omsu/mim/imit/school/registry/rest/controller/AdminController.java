@@ -25,12 +25,11 @@ public class AdminController {
     @RequestMapping(
             method = {RequestMethod.DELETE, RequestMethod.OPTIONS}
     )
-    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
+    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"},
+            methods = {RequestMethod.DELETE, RequestMethod.OPTIONS})
     public ResponseEntity<ChildRestResponse> delete(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.deleteById(id));
     }
-
-    @RequestMapping
 
     @PostMapping("/admin/v1/deactivateChildren")
     @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
