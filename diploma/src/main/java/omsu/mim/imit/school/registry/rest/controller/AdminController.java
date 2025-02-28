@@ -18,30 +18,22 @@ public class AdminController {
     private final ChildService childService;
 
     @GetMapping("/admin/v1/filter")
-    //@CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public ResponseEntity<List<ChildRestResponse>> filter(FilterChildrenRequestDto request) {
         request.correctParams();
         return ResponseEntity.ok(childService.filter(request));
     }
 
-    @RequestMapping(
-            value = "/admin/v1/delete",
-            method = {RequestMethod.DELETE}
-    )
-//    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"},
-//            methods = {RequestMethod.DELETE, RequestMethod.OPTIONS})
+    @DeleteMapping("/admin/v1/delete")
     public ResponseEntity<ChildRestResponse> delete(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.deleteById(id));
     }
 
     @PostMapping("/admin/v1/deactivateChildren")
-    //@CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public ResponseEntity<ChildRestResponse> activateChildren(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.changeStatus(id, ChildStatus.APPROVED));
     }
 
     @PostMapping("/admin/v1/changeStatus")
-   // @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public ResponseEntity<ChildRestResponse> deactivateChildren(@RequestParam UUID id, @RequestParam ChildStatus status) {
         return ResponseEntity.ok(childService.changeStatus(id, status));
     }
