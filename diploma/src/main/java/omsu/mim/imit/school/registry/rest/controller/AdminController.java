@@ -8,12 +8,7 @@ import omsu.mim.imit.school.registry.data.entity.enumeration.ChildStatus;
 import omsu.mim.imit.school.registry.rest.dto.request.FilterChildrenRequestDto;
 import omsu.mim.imit.school.registry.rest.dto.response.ChildRestResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,17 +22,15 @@ public class AdminController {
         return ResponseEntity.ok(childService.filter(request));
     }
 
-    @DeleteMapping("/admin/v1/delete")
+    @RequestMapping(
+            method = {RequestMethod.DELETE, RequestMethod.OPTIONS}
+    )
     @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public ResponseEntity<ChildRestResponse> delete(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.deleteById(id));
     }
-    @PostMapping("/admin/v1/delete")
-    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
-    public ResponseEntity<ChildRestResponse> post(@RequestParam UUID id) {
-        return ResponseEntity.ok(childService.deleteById(id));
-    }
 
+    @RequestMapping
 
     @PostMapping("/admin/v1/deactivateChildren")
     @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
