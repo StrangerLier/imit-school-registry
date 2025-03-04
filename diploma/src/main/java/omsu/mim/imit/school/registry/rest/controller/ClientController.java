@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
 @RequiredArgsConstructor
 public class ClientController {
 
@@ -22,13 +23,11 @@ public class ClientController {
     private final ApproveChildManager approveChildManager;
 
     @PostMapping("/v1/registerChild")
-    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public void register(@RequestBody ChildRequestDto request) {
         approveChildManager.manage(request);
     }
 
     @GetMapping("/v1/test")
-    @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
     public String test() {
         return "test";
     }
