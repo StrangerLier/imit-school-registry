@@ -28,6 +28,11 @@ public class AdminController {
         return ResponseEntity.ok(childService.deleteById(id));
     }
 
+    @RequestMapping(value = "/admin/v1/delete", method = RequestMethod.OPTIONS)
+    public ResponseEntity<Integer> deleteOption() {
+        return ResponseEntity.ok(200);
+    }
+    
     @PostMapping("/admin/v1/deactivateChildren")
     public ResponseEntity<ChildRestResponse> activateChildren(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.changeStatus(id, ChildStatus.APPROVED));
