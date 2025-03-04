@@ -29,7 +29,7 @@ public class AdminController {
     }
 
     @PostMapping(value = "/admin/v1/delete")
-    public ResponseEntity<Integer> deleteOption() {
+    public ResponseEntity<Integer> deleteOption(@RequestParam UUID id) {
         return ResponseEntity.ok(200);
     }
     
@@ -39,7 +39,7 @@ public class AdminController {
     }
 
     @PostMapping("/admin/v1/changeStatus")
-    public ResponseEntity<ChildRestResponse> deactivateChildren(@RequestParam UUID id, @RequestParam ChildStatus status) {
+    public ResponseEntity<ChildRestResponse> changeStatus(@RequestParam UUID id, @RequestParam ChildStatus status) {
         return ResponseEntity.ok(childService.changeStatus(id, status));
     }
 }
