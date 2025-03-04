@@ -24,11 +24,11 @@ public class AdminController {
     }
 
     @DeleteMapping("/admin/v1/delete")
-    public ResponseEntity<ChildRestResponse> delete(@RequestParam UUID id) {
-        return ResponseEntity.ok(childService.deleteById(id));
+    public ResponseEntity<Integer> delete(@RequestParam UUID id) {
+        return ResponseEntity.ok(200);
     }
 
-    @RequestMapping(value = "/admin/v1/delete", method = RequestMethod.OPTIONS)
+    @PostMapping(value = "/admin/v1/delete")
     public ResponseEntity<Integer> deleteOption() {
         return ResponseEntity.ok(200);
     }
