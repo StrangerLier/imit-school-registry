@@ -19,4 +19,19 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
     """)
     void increaseListenersAmount(@Param("groupId") UUID groupId);
 
+    @Modifying
+    @Transactional
+    @Query("""
+            update group_info
+            set classNumber = :#{#group.classNumber},
+                lecturer = :#{#group.lecturer},
+                direction = :#{#group.direction},
+                address = :#{#group.address},
+                listenersAmount = :#{#group.listenersAmount},
+                approvedListeners = :#{#group.approvedListeners},
+                time = :#{#group.time}
+            where id = :#{#group.id}
+    """)
+    void update(@Param("group") GroupEntity group);
+
 }
