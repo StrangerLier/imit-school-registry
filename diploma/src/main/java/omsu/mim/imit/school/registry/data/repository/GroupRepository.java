@@ -1,7 +1,9 @@
 package omsu.mim.imit.school.registry.data.repository;
 
+import java.util.List;
 import java.util.UUID;
 import jakarta.transaction.Transactional;
+import omsu.mim.imit.school.registry.data.entity.ChildEntity;
 import omsu.mim.imit.school.registry.data.entity.GroupEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,5 +20,26 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
             where id = :groupId
     """)
     void increaseListenersAmount(@Param("groupId") UUID groupId);
+
+    @Modifying
+    @Transactional
+    @Query("""
+            update group_info
+            set classNumber = :#{#group.classNumber},
+                lecturer = :#{#group.lecturer},
+                direction = :#{#group.direction},
+                address = :#{#group.address},
+                listenersAmount = :#{#group.listenersAmount},
+                approvedListeners = :#{#group.approvedListeners},
+                time = :#{#group.time}
+            where id = :#{#group.id}
+    """)
+    void update(@Param("group") GroupEntity group);
+
+
+    @Query("""
+            select c from child c where groupId in (:#{#groupIds})
+    """)
+    List<ChildEntity> getChildInGroups(List<UUID> groupIds);
 
 }
