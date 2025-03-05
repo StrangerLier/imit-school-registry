@@ -24,7 +24,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.disable())
                 .authorizeHttpRequests(
                     auth -> {
                         auth.requestMatchers("/admin/**").hasRole(SecurityConstants.ADMIN_ROLE)
