@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import omsu.mim.imit.school.registry.data.entity.enumeration.ChildStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
@@ -36,7 +37,9 @@ public class ChildRestResponse {
 
     private String phone;
 
-    private Boolean isActive;
+    //private Boolean isActive;
 
     private String duplicateKey;
+
+    private ChildStatus status;
 }

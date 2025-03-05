@@ -28,18 +28,18 @@ public class AdminController {
         return ResponseEntity.ok(200);
     }
 
-    @PostMapping(value = "/admin/v1/delete")
-    public ResponseEntity<Integer> deleteOption(@RequestParam UUID id) {
-        return ResponseEntity.ok(200);
+    @PostMapping(value = "/admin/v1/changeGroup")
+    public ResponseEntity<ChildRestResponse> deleteOption(@RequestParam UUID id, @RequestParam UUID groupId) {
+        return ResponseEntity.ok(childService.changeGroup(id, groupId));
     }
-    
+
     @PostMapping("/admin/v1/deactivateChildren")
     public ResponseEntity<ChildRestResponse> activateChildren(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.changeStatus(id, ChildStatus.APPROVED));
     }
 
     @PostMapping("/admin/v1/changeStatus")
-    public ResponseEntity<ChildRestResponse> changeStatus(@RequestParam UUID id, @RequestParam ChildStatus status) {
-        return ResponseEntity.ok(childService.changeStatus(id, status));
+    public ResponseEntity<ChildRestResponse> changeStatus(@RequestParam String id, @RequestParam String status) {
+        return ResponseEntity.ok(childService.changeStatus(UUID.fromString(id), ChildStatus.valueOf(status.toUpperCase())));
     }
 }

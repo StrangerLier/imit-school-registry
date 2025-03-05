@@ -103,4 +103,12 @@ public class ChildService {
     public void setDuplicateKey(ChildEntity childEntity) {
         childRepository.save(childEntity);
     }
+
+    public ChildRestResponse changeGroup(UUID id, UUID groupId) {
+        var child = childRepository.findById(id).get();
+        child.setGroupId(groupId);
+
+        childRepository.save(child);
+        return childRestResponseMapper.map(child);
+    }
 }
