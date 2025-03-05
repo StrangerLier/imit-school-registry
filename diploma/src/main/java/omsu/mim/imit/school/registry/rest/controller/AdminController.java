@@ -24,8 +24,13 @@ public class AdminController {
     }
 
     @DeleteMapping("/admin/v1/delete")
-    public ResponseEntity<ChildRestResponse> delete(@RequestParam UUID id) {
+    public ResponseEntity<Integer> delete(@RequestParam UUID id) {
         return ResponseEntity.ok(childService.deleteById(id));
+    }
+
+    @PostMapping(value = "/admin/v1/changeGroup")
+    public ResponseEntity<ChildRestResponse> deleteOption(@RequestParam UUID id, @RequestParam UUID groupId) {
+        return ResponseEntity.ok(childService.changeGroup(id, groupId));
     }
 
     @PostMapping("/admin/v1/deactivateChildren")
@@ -34,7 +39,7 @@ public class AdminController {
     }
 
     @PostMapping("/admin/v1/changeStatus")
-    public ResponseEntity<ChildRestResponse> deactivateChildren(@RequestParam UUID id, @RequestParam ChildStatus status) {
-        return ResponseEntity.ok(childService.changeStatus(id, status));
+    public ResponseEntity<ChildRestResponse> changeStatus(@RequestParam String id, @RequestParam String status) {
+        return ResponseEntity.ok(childService.changeStatus(UUID.fromString(id), ChildStatus.valueOf(status.toUpperCase())));
     }
 }

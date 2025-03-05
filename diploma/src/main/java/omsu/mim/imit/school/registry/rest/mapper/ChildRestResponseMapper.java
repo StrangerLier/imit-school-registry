@@ -18,7 +18,7 @@ public interface ChildRestResponseMapper {
 
     List<ChildRestResponse> mapAll(List<ChildEntity> entities);
 
-    @Mapping(target = "isActive", source = "status", qualifiedByName = "isStatusApproved")
+    //@Mapping(target = "isActive", source = "status", qualifiedByName = "isStatusApproved")
     ChildRestResponse map(ChildEntity entity);
 
     @Named("isStatusApproved")

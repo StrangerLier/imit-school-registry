@@ -71,13 +71,14 @@ public class ChildService {
 
     }
 
-    public ChildRestResponse deleteById(UUID id) {
-        var child = childRepository.findById(id).get();
+    public Integer deleteById(UUID id) {
+        //var child = childRepository.findById(id).get();
+        //child.setStatus(ChildStatus.ARCHIVED);
+        //childRepository.save(child);
 
-        child.setStatus(ChildStatus.ARCHIVED);
-        childRepository.save(child);
+        childRepository.deleteById(id);
 
-        return childRestResponseMapper.map(child);
+        return 200;
     }
 
     public ChildRestResponse changeStatus(UUID id, ChildStatus status) {
@@ -102,5 +103,13 @@ public class ChildService {
 
     public void setDuplicateKey(ChildEntity childEntity) {
         childRepository.save(childEntity);
+    }
+
+    public ChildRestResponse changeGroup(UUID id, UUID groupId) {
+        var child = childRepository.findById(id).get();
+        child.setGroupId(groupId);
+
+        childRepository.save(child);
+        return childRestResponseMapper.map(child);
     }
 }
