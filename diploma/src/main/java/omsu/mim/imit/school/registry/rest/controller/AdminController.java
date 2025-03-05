@@ -25,7 +25,7 @@ public class AdminController {
 
     @DeleteMapping("/admin/v1/delete")
     public ResponseEntity<Integer> delete(@RequestParam UUID id) {
-        return ResponseEntity.ok(200);
+        return ResponseEntity.ok(childService.deleteById(id));
     }
 
     @PostMapping(value = "/admin/v1/changeGroup")
