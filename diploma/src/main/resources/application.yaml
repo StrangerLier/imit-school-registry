@@ -4,9 +4,6 @@ server:
 security:
     basic:
         enable: false
-management:
-    security:
-        enabled: false
 
 spring:
     application:
