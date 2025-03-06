@@ -33,9 +33,13 @@ public class SecurityConfig {
                     }
                 )
                 .httpBasic(Customizer.withDefaults())
+                .formLogin(login -> login
+                    .loginPage("/auth")
+                    .permitAll()
+                )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .permitAll())
+                    .logoutUrl("/logout")
+                    .permitAll())
                 .build();
     }
 
