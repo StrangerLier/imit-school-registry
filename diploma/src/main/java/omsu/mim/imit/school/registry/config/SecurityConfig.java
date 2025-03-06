@@ -34,7 +34,7 @@ public class SecurityConfig {
                 )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(login -> login
-                    .loginPage("/auth")
+                    .loginPage("https://dip.rkkm.space/auth")
                     .permitAll()
                 )
                 .logout(logout -> logout
