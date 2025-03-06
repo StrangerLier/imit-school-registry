@@ -10,7 +10,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("*")
-            .allowedMethods("GET", "POST", "PUT", "DELETE").allowCredentials(false);
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") //or whichever methods you want to allow
+                .allowedOrigins("*") //or www.example.com if you want to be more specific
+                .allowedHeaders("Content_Type", "Authorization"); //i also put Authorization since i saw you probably want to do so
     }
 }
