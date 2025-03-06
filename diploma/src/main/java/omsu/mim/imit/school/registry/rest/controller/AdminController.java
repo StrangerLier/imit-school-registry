@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"},
-            methods = {RequestMethod.DELETE, RequestMethod.OPTIONS, RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST})
+            methods = {RequestMethod.DELETE, RequestMethod.OPTIONS, RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST},
+            allowCredentials = "false")
 @RequiredArgsConstructor
 public class AdminController {
     private final ChildService childService;
