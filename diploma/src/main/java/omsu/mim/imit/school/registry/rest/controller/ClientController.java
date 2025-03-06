@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"})
 @RequiredArgsConstructor
 public class ClientController {
 

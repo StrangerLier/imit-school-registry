@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@CrossOrigin(origins = {"https://dip.rkkm.space", "https://dipapi.rkkm.space"},
-        allowCredentials = "false")
 @RequiredArgsConstructor
 public class GroupController {
 
