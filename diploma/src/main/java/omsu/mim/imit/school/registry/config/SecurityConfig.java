@@ -36,11 +36,11 @@ public class SecurityConfig {
                             .anyRequest().permitAll();
                     }
                 )
-                .formLogin(login -> login
-                    .loginPage("https://dip.rkkm.space/auth")
-                    .defaultSuccessUrl("https://dip.rkkm.space/students")
-                    .permitAll()
-                )
+//                .formLogin(login -> login
+//                    .loginPage("https://dip.rkkm.space/auth")
+//                    .defaultSuccessUrl("https://dip.rkkm.space/students")
+//                    .permitAll()
+//                )
                 .logout(logout -> logout
                     .logoutUrl("/logout")
                     .permitAll())
