@@ -26,7 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .cors().and()
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                     auth -> {
