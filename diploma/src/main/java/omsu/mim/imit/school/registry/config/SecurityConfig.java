@@ -27,6 +27,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                     auth -> {
                         auth.requestMatchers("/admin/**").hasRole(SecurityConstants.ADMIN_ROLE)
@@ -35,7 +36,6 @@ public class SecurityConfig {
                             .anyRequest().permitAll();
                     }
                 )
-                .httpBasic(Customizer.withDefaults())
                 .formLogin(login -> login
                     .loginPage("https://dip.rkkm.space/auth")
                     .defaultSuccessUrl("https://dip.rkkm.space/students")
