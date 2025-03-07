@@ -1,6 +1,7 @@
 package omsu.mim.imit.school.registry.buiseness.service;
 
 import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -58,6 +59,17 @@ public class GroupService {
 
         return convertToResponse(GroupExcelMapper.allChildToExcel(childEntities, groupsByIdMap),
                 "child.xlsx");
+    }
+
+    public ResponseEntity<Resource> downloadChildByDir(String[] dirList) {
+        List<ChildEntity> childEntities = childRepository.findAll();
+        List<GroupEntity> groupEntities = repository.findAll();
+
+        var dirs = Arrays.stream(dirList).toList();
+        var groupsByIdMap = groupEntities.stream().collect(Collectors.toMap(GroupEntity::getId, Function.identity()));
+
+        return convertToResponse(GroupExcelMapper.childByDirToExcel(childEntities, groupsByIdMap, dirs),
+                "childByDir.xlsx");
     }
 
     public List<GroupEntity> findAll() {

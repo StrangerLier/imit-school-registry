@@ -27,6 +27,7 @@ public class ApproveChildManager {
     private void validateRequest(ChildRequestDto request, GroupEntity group) {
         if (isNoSlot(group)) {
             request.setGroupId(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+            groupService.increaseListener(UUID.fromString("00000000-0000-0000-0000-000000000000"));
         } else {
             groupService.increaseListener(group.getId());
         }

@@ -21,5 +21,9 @@ public class GroupRestResponse {
 
     private String address;
 
+    private String listenersAmount;
+
+    private String approvedListeners;
+
     private String time;
 }

@@ -29,8 +29,11 @@ public class AdminController {
     }
 
     @PostMapping(value = "/admin/v1/changeGroup")
-    public ResponseEntity<ChildRestResponse> deleteOption(@RequestParam UUID id, @RequestParam UUID groupId) {
-        return ResponseEntity.ok(childService.changeGroup(id, groupId));
+    public ResponseEntity deleteOption(@RequestParam UUID id, @RequestParam UUID groupId) {
+        var response = childService.changeGroup(id, groupId);
+        return response == null
+                ? ResponseEntity.status(505).body("Группа заполнена")
+                : ResponseEntity.ok(response);
     }
 
     @PostMapping("/admin/v1/deactivateChildren")

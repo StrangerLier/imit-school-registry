@@ -61,4 +61,11 @@ public class GroupController {
 
         return service.downloadAllChild();
     }
+
+    @GetMapping("/group/v1/downloadByDir")
+    public ResponseEntity<Resource> downloadAllChild(@RequestParam (value="dirList") String[] dirList) {
+        String filename = "childByDir.xlsx";
+
+        return service.downloadChildByDir(dirList);
+    }
 }

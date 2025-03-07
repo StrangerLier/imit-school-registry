@@ -72,10 +72,6 @@ public class ChildService {
     }
 
     public Integer deleteById(UUID id) {
-        //var child = childRepository.findById(id).get();
-        //child.setStatus(ChildStatus.ARCHIVED);
-        //childRepository.save(child);
-
         childRepository.deleteById(id);
 
         return 200;
@@ -107,9 +103,22 @@ public class ChildService {
 
     public ChildRestResponse changeGroup(UUID id, UUID groupId) {
         var child = childRepository.findById(id).get();
+        var group = groupRepository.findById(groupId).get();
+
+        if (!group.getId().toString().equals("00000000-0000-0000-0000-000000000000") &&
+                group.getApprovedListeners() + 1 > group.getListenersAmount()) {
+            return null;
+        }
+
+        var oldGroup = groupRepository.findById(child.getGroupId()).get();
+
+        oldGroup.setApprovedListeners(oldGroup.getApprovedListeners() - 1);
+        group.setApprovedListeners(group.getApprovedListeners() + 1);
         child.setGroupId(groupId);
 
         childRepository.save(child);
+        groupRepository.save(group);
+        groupRepository.save(oldGroup);
         return childRestResponseMapper.map(child);
     }
 }
