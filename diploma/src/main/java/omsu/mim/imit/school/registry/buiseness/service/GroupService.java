@@ -31,8 +31,9 @@ public class GroupService {
         repository.save(entity);
     }
 
-    public void update(GroupEntity entity) {
+    public GroupEntity update(GroupEntity entity) {
         repository.update(entity);
+        return repository.findById(entity.getId()).get();
     }
 
     public ResponseEntity<Resource> downloadAllGroupsInfo() {

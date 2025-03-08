@@ -13,7 +13,6 @@ import omsu.mim.imit.school.registry.rest.dto.response.GroupRestResponse;
 import omsu.mim.imit.school.registry.rest.mapper.GroupRestResponseMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.core.io.Resource;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +33,8 @@ public class GroupController {
     }
 
     @PostMapping("/group/v1/updateGroup")
-    public void updateGroup(@RequestBody UpdateGroupRequest request) {
-        service.update(groupMapper.map(request));
+    public ResponseEntity<GroupRestResponse> updateGroup(@RequestBody UpdateGroupRequest request) {
+        return ResponseEntity.ok(groupRestResponseMapper.map(service.update(groupMapper.map(request))));
     }
 
     @GetMapping("/group/v1")
