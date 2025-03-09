@@ -29,7 +29,7 @@ public class AuthenticationService {
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow( () ->  new BadCredentialsException("Invalid login or password"));
         var role = roleRepository.findAllByUserId(user.getId()).get(0);
-        if (passwordEncoder.encode(passwordEncoder.encode(request.getPassword())).equals(user.getPassword())) {
+        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             return new JwtTokenResponse(jwtProvider.generateToken(user.getUsername()), role.getRoleName());
         } else {
             throw new BadCredentialsException("Invalid login or password");

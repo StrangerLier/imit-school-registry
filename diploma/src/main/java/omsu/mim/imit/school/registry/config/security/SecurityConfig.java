@@ -23,9 +23,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors().and()
+                .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class )
                 .authorizeHttpRequests(
                     auth -> {
                         auth.requestMatchers("/admin/**").hasRole(SecurityConstants.ADMIN_ROLE)
@@ -35,11 +34,12 @@ public class SecurityConfig {
                             .anyRequest().permitAll();
                     }
                 )
-//                .formLogin(login -> login
-//                    .loginPage("https://dip.rkkm.space/auth")
-//                    .defaultSuccessUrl("https://dip.rkkm.space/students")
-//                    .permitAll()
-//                )
+                .formLogin(login -> login
+                    .loginPage("https://dip.rkkm.space/auth")
+                    .defaultSuccessUrl("https://dip.rkkm.space/students")
+                    .permitAll()
+                )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                     .logoutUrl("/logout")
                     .permitAll())
