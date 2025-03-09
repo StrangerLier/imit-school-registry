@@ -1,4 +1,4 @@
-package omsu.mim.imit.school.registry.config;
+package omsu.mim.imit.school.registry.config.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -9,10 +9,13 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("*")
-                .allowedOrigins("https://dip.rkkm.space")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+        registry
+            .addMapping("/**")
+            .allowedMethods("*")
+            .allowedOrigins("https://dip.rkkm.space")
+            .allowedHeaders("*")
+            .allowedOriginPatterns("*")
+            .allowCredentials(false)
+        ;
     }
 }
