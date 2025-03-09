@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import omsu.mim.imit.school.registry.buiseness.service.security.AuthenticationService;
 import omsu.mim.imit.school.registry.rest.dto.request.JwtTokenRequest;
 import omsu.mim.imit.school.registry.rest.dto.response.JwtTokenResponse;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
