@@ -1,6 +1,5 @@
 package omsu.mim.imit.school.registry.rest.controller;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +27,7 @@ public class GroupController {
     private final GroupRestResponseMapper groupRestResponseMapper;
 
     @PostMapping("/group/v1/create")
-    public void filter(@RequestBody CreateGroupRequest request) {
+    public void create(@RequestBody CreateGroupRequest request) {
         service.create(groupMapper.map(request));
     }
 
@@ -43,27 +42,23 @@ public class GroupController {
     }
 
     @GetMapping("/group/v1/downloadAllGroupsInfo")
-    public ResponseEntity<Resource> downloadAllGroupsInfo() {;
+    public ResponseEntity<Resource> downloadAllGroupsInfo() {
         return service.downloadAllGroupsInfo();
     }
 
     @GetMapping("/group/v1/downloadChildInGroups")
-    public ResponseEntity<Resource> downloadChildInGroups(@RequestParam (value="groupIds") String[] groupIds) throws IOException {
+    public ResponseEntity<Resource> downloadChildInGroups(@RequestParam (value="groupIds") String[] groupIds) {
         var groupIdsList = Arrays.stream(groupIds).map(UUID::fromString).toList();
         return service.downloadChildInGroups(groupIdsList);
     }
 
     @GetMapping("/group/v1/downloadAllChild")
     public ResponseEntity<Resource> downloadAllChild() {
-        String filename = "child.xlsx";
-
         return service.downloadAllChild();
     }
 
     @GetMapping("/group/v1/downloadByDir")
     public ResponseEntity<Resource> downloadAllChild(@RequestParam (value="dirList") String[] dirList) {
-        String filename = "childByDir.xlsx";
-
         return service.downloadChildByDir(dirList);
     }
 }

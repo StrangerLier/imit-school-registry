@@ -15,6 +15,5 @@ public interface GroupRestResponseMapper {
 
     List<GroupRestResponse> mapAll(List<GroupEntity> entities);
 
-//    @Mapping(target = "groupId", source = "id")
     GroupRestResponse map(GroupEntity entity);
 }

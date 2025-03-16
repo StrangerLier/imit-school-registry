@@ -16,7 +16,7 @@ public class UpdateGroupRequest {
 
     private String classNumber;
 
-    private String lecturer;
+    private UUID teacherId;
 
     private String direction;
 

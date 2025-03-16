@@ -26,7 +26,7 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
     @Query("""
             update group_info
             set classNumber = :#{#group.classNumber},
-                lecturer = :#{#group.lecturer},
+                teacherId = :#{#group.teacherId},
                 direction = :#{#group.direction},
                 address = :#{#group.address},
                 listenersAmount = :#{#group.listenersAmount},
@@ -35,7 +35,6 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
             where id = :#{#group.id}
     """)
     void update(@Param("group") GroupEntity group);
-
 
     @Query("""
             select c from child c where groupId in (:#{#groupIds})

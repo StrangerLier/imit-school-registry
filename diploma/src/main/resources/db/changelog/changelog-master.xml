@@ -10,4 +10,7 @@
     <include file="sql/6_create_table_user.sql" relativeToChangelogFile="true" />
     <include file="sql/7_create_table_role.sql" relativeToChangelogFile="true" />
     <include file="sql/8_create_admin_with_authority.sql" relativeToChangelogFile="true" />
+    <include file="sql/9_create_table_teacher.sql" relativeToChangelogFile="true" />
+    <include file="sql/10_create_table_assistant.sql" relativeToChangelogFile="true" />
+    <include file="sql/11_alter_group_for_new_lecturer_format.sql" relativeToChangelogFile="true" />
 </databaseChangeLog>

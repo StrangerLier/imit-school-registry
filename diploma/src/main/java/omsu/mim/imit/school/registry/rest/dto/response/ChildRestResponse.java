@@ -37,8 +37,6 @@ public class ChildRestResponse {
 
     private String phone;
 
-    //private Boolean isActive;
-
     private String duplicateKey;
 
     private ChildStatus status;
