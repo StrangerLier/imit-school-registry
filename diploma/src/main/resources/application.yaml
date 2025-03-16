@@ -29,7 +29,7 @@ spring:
                     lob:
                         non_contextual_creation: true
     datasource:
-        url: jdbc:postgresql://localhost:5432/postgres
+        url: jdbc:postgresql://localhost:5432/imit_school_registry
         username: postgres
         password: postgres
         driverClassName: org.postgresql.Driver
