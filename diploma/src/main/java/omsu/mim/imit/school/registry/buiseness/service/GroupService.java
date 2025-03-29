@@ -150,7 +150,7 @@ public class GroupService {
     }
 
     private void createAttendance(ChildEntity child, ClassEntity classEntity) {
-        var attendance = new AttendanceEntity(UUID.randomUUID(), classEntity.getId(), child.getId(), "", false);
+        var attendance = new AttendanceEntity(UUID.randomUUID(), classEntity.getId(), child.getId(), "", null);
         attendanceRepository.save(attendance);
     }
 
