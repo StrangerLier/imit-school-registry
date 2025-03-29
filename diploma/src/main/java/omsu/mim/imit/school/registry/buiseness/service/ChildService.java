@@ -58,7 +58,7 @@ public class ChildService {
                             response.getSecondName(),
                             response.getSurname(),
                             response.getBirthDate(),
-                            group.getDirection(),
+                            group.getDirectionId(), //TODO fix duplication check
                             group.getTime()
                     );
                     return childRestResponseMapper.mapAll(duplicates).stream();
@@ -92,7 +92,7 @@ public class ChildService {
                 request.getSecondName(),
                 request.getSurname(),
                 request.getBirthDate(),
-                group.getDirection(),
+                group.getDirectionId(), //TODO fix duplications check
                 group.getTime()
         );
     }

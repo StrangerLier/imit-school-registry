@@ -7,10 +7,12 @@ import omsu.mim.imit.school.registry.buiseness.service.AdminService;
 import omsu.mim.imit.school.registry.buiseness.service.ChildService;
 import omsu.mim.imit.school.registry.data.entity.enumeration.ChildStatus;
 import omsu.mim.imit.school.registry.rest.dto.request.AssistantRequestDto;
+import omsu.mim.imit.school.registry.rest.dto.request.DirectionRequestDto;
 import omsu.mim.imit.school.registry.rest.dto.request.FilterChildrenRequestDto;
 import omsu.mim.imit.school.registry.rest.dto.request.TeacherRequestDto;
 import omsu.mim.imit.school.registry.rest.dto.response.AssistantRestResponse;
 import omsu.mim.imit.school.registry.rest.dto.response.ChildRestResponse;
+import omsu.mim.imit.school.registry.rest.dto.response.DirectionRestResponse;
 import omsu.mim.imit.school.registry.rest.dto.response.TeacherRestResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +62,11 @@ public class AdminController {
         adminService.registerAssistant(request);
     }
 
+    @PostMapping("/admin/v1/addDirection")
+    public void createDirection(@RequestBody DirectionRequestDto request) {
+        adminService.addDirection(request);
+    }
+
     @GetMapping("/admin/v1/teachers")
     public ResponseEntity<List<TeacherRestResponse>> getTeachers() {
         return ResponseEntity.ok(adminService.getTeachers());
@@ -69,4 +76,11 @@ public class AdminController {
     public ResponseEntity<List<AssistantRestResponse>> getAssistants() {
         return ResponseEntity.ok(adminService.getAssistants());
     }
+
+    @GetMapping("/admin/v1/directions")
+    public ResponseEntity<List<DirectionRestResponse>> getDirections() {
+        return ResponseEntity.ok(adminService.getDirections());
+    }
+
+
 }

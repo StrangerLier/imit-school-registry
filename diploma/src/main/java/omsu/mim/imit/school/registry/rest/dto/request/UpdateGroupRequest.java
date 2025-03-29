@@ -18,7 +18,7 @@ public class UpdateGroupRequest {
 
     private UUID teacherId;
 
-    private String direction;
+    private UUID directionId;
 
     private String address;
 
@@ -27,4 +27,6 @@ public class UpdateGroupRequest {
     private Integer approvedListeners;
 
     private String time;
+
+    private String dayOfWeek;
 }

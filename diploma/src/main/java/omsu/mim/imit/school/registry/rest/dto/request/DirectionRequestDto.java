@@ -9,12 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssistantRequestDto {
+public class DirectionRequestDto {
     private String name;
-    private String secondName;
-    private String surname;
-    private String phone;
-    private String email;
-    private int workExperience;
-    private String workPlace;
 }

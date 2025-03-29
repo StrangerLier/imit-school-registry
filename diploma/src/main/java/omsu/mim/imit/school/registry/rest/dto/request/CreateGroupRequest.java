@@ -12,16 +12,17 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateGroupRequest {
-
     private String classNumber;
 
     private UUID teacherId;
 
-    private String direction;
+    private UUID directionId;
 
     private String address;
 
     private Integer listenersAmount;
 
     private String time;
+
+    private String dayOfWeek;
 }

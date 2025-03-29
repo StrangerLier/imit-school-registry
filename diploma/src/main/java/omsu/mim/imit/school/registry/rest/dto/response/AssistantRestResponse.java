@@ -16,4 +16,8 @@ public class AssistantRestResponse {
     private String name;
     private String secondName;
     private String surname;
+    private String phone;
+    private String email;
+    private int workExperience;
+    private String workPlace;
 }

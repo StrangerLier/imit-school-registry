@@ -1,0 +1,1 @@
+ALTER TABLE group_info ADD COLUMN day_of_week varchar(20);

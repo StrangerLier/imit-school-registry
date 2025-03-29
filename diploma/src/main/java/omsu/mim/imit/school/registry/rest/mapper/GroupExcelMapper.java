@@ -89,7 +89,7 @@ public class GroupExcelMapper {
             for (GroupEntity c : list) {
                 Row dataRow = sheet.createRow(rowInd);
                 rowInd++;
-                dataRow.createCell(0).setCellValue(c.getDirection());
+                dataRow.createCell(0).setCellValue(String.valueOf(c.getDirectionId()));
                 dataRow.createCell(1).setCellValue(String.valueOf(c.getTeacherId())); //TODO add teacher's name mapping
                 dataRow.createCell(2).setCellValue(c.getTime());
                 dataRow.createCell(3).setCellValue(c.getAddress());
@@ -109,7 +109,7 @@ public class GroupExcelMapper {
     public static ByteArrayInputStream childInGroupsToExcel(List<ChildEntity> child, Set<GroupEntity> groups) {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             for (GroupEntity group : groups) {
-                String sheetTitle = CHILD_IN_GROUPS_SHEET_NAME + " " + group.getDirection() + " " + group.getTeacherId() + group.getTime(); //TODO add teacher's name mapping
+                String sheetTitle = CHILD_IN_GROUPS_SHEET_NAME + " " + group.getDirectionId() + " " + group.getTeacherId() + group.getTime(); //TODO add teacher's name mapping
 
                 Sheet sheet = workbook.createSheet(sheetTitle);
                 sheet.setDefaultColumnWidth(16);
@@ -123,7 +123,7 @@ public class GroupExcelMapper {
                 Row dataRow = sheet.createRow(rowInd);
                 rowInd++;
 
-                dataRow.createCell(0).setCellValue(group.getDirection());
+                dataRow.createCell(0).setCellValue(String.valueOf(group.getDirectionId()));
                 dataRow.createCell(1).setCellValue(String.valueOf(group.getTeacherId())); //TODO add teacher's name mapping
                 dataRow.createCell(2).setCellValue(group.getTime());
                 dataRow.createCell(3).setCellValue(group.getAddress());
@@ -183,7 +183,7 @@ public class GroupExcelMapper {
                 dataRow.createCell(8).setCellValue(c.getClassNumber());
                 dataRow.createCell(9).setCellValue(c.getAddress());
                 dataRow.createCell(10).setCellValue(c.getBirthDate().toString());
-                dataRow.createCell(11).setCellValue(groups.get(c.getGroupId()).getDirection());
+                dataRow.createCell(11).setCellValue(String.valueOf(groups.get(c.getGroupId()).getDirectionId()));
                 dataRow.createCell(12).setCellValue(groups.get(c.getGroupId()).getTime());
                 dataRow.createCell(13).setCellValue(groups.get(c.getGroupId()).getAddress());
                 dataRow.createCell(14).setCellValue(String.valueOf(groups.get(c.getGroupId()).getTeacherId())); //TODO add teacher's name mapping
@@ -217,7 +217,7 @@ public class GroupExcelMapper {
                 int rowInd = 3;
 
                 for (ChildEntity c : child) {
-                    if (!groups.get(c.getGroupId()).getDirection().equals(dir)) {
+                    if (!groups.get(c.getGroupId()).getDirectionId().equals(dir)) { //TODO change directions comparing
                         continue;
                     }
                     Row dataRow = sheet.createRow(rowInd);

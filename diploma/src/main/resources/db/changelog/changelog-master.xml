@@ -13,4 +13,11 @@
     <include file="sql/9_create_table_teacher.sql" relativeToChangelogFile="true" />
     <include file="sql/10_create_table_assistant.sql" relativeToChangelogFile="true" />
     <include file="sql/11_alter_group_for_new_lecturer_format.sql" relativeToChangelogFile="true" />
+    <include file="sql/12_add_teacher_and_assistant_info_columns.sql" relativeToChangelogFile="true" />
+    <include file="sql/13_create_table_direction.sql" relativeToChangelogFile="true" />
+    <include file="sql/14_alter_group_for_new_direction_format.sql" relativeToChangelogFile="true" />
+    <include file="sql/15_insert_default_directions.sql" relativeToChangelogFile="true" />
+    <include file="sql/16_create_table_class.sql" relativeToChangelogFile="true" />
+    <include file="sql/17_alter_group_for_classes.sql" relativeToChangelogFile="true" />
+    <include file="sql/18_create_table_attendance.sql" relativeToChangelogFile="true" />
 </databaseChangeLog>

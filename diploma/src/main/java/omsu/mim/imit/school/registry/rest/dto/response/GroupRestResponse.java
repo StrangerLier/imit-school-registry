@@ -17,7 +17,7 @@ public class GroupRestResponse {
 
     private UUID teacherId;
 
-    private String direction;
+    private UUID directionId;
 
     private String address;
 
@@ -26,4 +26,6 @@ public class GroupRestResponse {
     private String approvedListeners;
 
     private String time;
+
+    private String dayOfWeek;
 }

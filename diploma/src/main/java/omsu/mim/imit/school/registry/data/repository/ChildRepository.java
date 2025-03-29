@@ -30,7 +30,7 @@ public interface ChildRepository extends JpaRepository<ChildEntity, UUID> {
                 and (:surname is null or c.surname = :surname)
                 and (c.birthDate = :birthDate)
                 and (
-                    g.direction = :direction
+                    g.directionId = :directionId
                     or g.time = :time
                     )
     """)
@@ -38,6 +38,10 @@ public interface ChildRepository extends JpaRepository<ChildEntity, UUID> {
                                    @Param("secondName") String secondName,
                                    @Param("surname") String surname,
                                    @Param("birthDate") LocalDate birthDate,
-                                   @Param("direction") String direction,
+                                   @Param("directionId") UUID directionId,
                                    @Param("time") String time);
+
+    @Query("select c from child c "
+            + "where c.groupId = :groupId")
+    List<ChildEntity> getAllByGroupId(@Param("groupId") UUID groupId);
 }

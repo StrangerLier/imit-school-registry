@@ -11,13 +11,10 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TeacherRestResponse {
+public class AttendanceRestResponse {
     private UUID id;
-    private String name;
-    private String secondName;
-    private String surname;
-    private String phone;
-    private String email;
-    private int workExperience;
-    private String workPlace;
+    private UUID classId;
+    private UUID childId;
+    private String comment;
+    private Boolean isAttend;
 }

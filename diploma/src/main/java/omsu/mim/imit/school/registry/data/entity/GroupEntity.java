@@ -24,8 +24,8 @@ public class GroupEntity {
     @Column(name = "class_number")
     private String classNumber;
 
-    @Column(name = "direction")
-    private String direction;
+    @Column(name = "direction_id")
+    private UUID directionId;
 
     @Column(name = "address")
     private String address;
@@ -41,4 +41,7 @@ public class GroupEntity {
 
     @Column(name = "teacher_id")
     private UUID teacherId;
+
+    @Column(name = "day_of_week")
+    private String dayOfWeek;
 }

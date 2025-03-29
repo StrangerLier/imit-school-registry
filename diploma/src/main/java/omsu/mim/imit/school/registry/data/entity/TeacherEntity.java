@@ -26,4 +26,16 @@ public class TeacherEntity {
 
     @Column(name = "surname")
     private String surname;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "work_experience")
+    private int workExperience;
+
+    @Column(name = "work_place")
+    private String workPlace;
 }

@@ -27,11 +27,12 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
             update group_info
             set classNumber = :#{#group.classNumber},
                 teacherId = :#{#group.teacherId},
-                direction = :#{#group.direction},
+                directionId = :#{#group.directionId},
                 address = :#{#group.address},
                 listenersAmount = :#{#group.listenersAmount},
                 approvedListeners = :#{#group.approvedListeners},
-                time = :#{#group.time}
+                time = :#{#group.time},
+                dayOfWeek = :#{#group.dayOfWeek}
             where id = :#{#group.id}
     """)
     void update(@Param("group") GroupEntity group);
