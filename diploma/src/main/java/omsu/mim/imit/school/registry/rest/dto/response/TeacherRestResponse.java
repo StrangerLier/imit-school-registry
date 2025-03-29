@@ -18,6 +18,6 @@ public class TeacherRestResponse {
     private String surname;
     private String phone;
     private String email;
-    private int workExperience;
+    private Integer workExperience;
     private String workPlace;
 }

@@ -34,7 +34,7 @@ public class TeacherEntity {
     private String email;
 
     @Column(name = "work_experience")
-    private int workExperience;
+    private Integer workExperience;
 
     @Column(name = "work_place")
     private String workPlace;
