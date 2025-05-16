@@ -44,4 +44,15 @@ public interface ChildRepository extends JpaRepository<ChildEntity, UUID> {
     @Query("select c from child c "
             + "where c.groupId = :groupId")
     List<ChildEntity> getAllByGroupId(@Param("groupId") UUID groupId);
+
+    @Query("""
+            select c from child c where c.groupId in (
+                select g.id
+                    from group_info g
+                    join direction d
+                        on  d.id = g.directionId
+                        and d.id in (:#{#dirIds})
+            )
+    """)
+    List<ChildEntity> getAllByDirIds(@Param("dirIds") List<UUID> dirIds);
 }

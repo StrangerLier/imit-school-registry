@@ -4,99 +4,31 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-import omsu.mim.imit.school.registry.data.entity.ChildEntity;
-import omsu.mim.imit.school.registry.data.entity.GroupEntity;
+
+import omsu.mim.imit.school.registry.util.excel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GroupExcelMapper {
 
-    private static final String[] ALL_GROUPS_HEADERS = {
-            "Направление",
-            "Преподаватель",
-            "Время",
-            "Адрес",
-            "Класс",
-            "Максимум участников",
-            "Записалось участников"
-    };
+    @Autowired
+    private AllGroupsExcel allGroupsExcel;
+    @Autowired
+    private ChildInGroupsExcel childInGroupsExcel;
+    @Autowired
+    private AllChildrenExcel allChildrenExcel;
+    @Autowired
+    private ChildrenByDirExcel childrenByDirExcel;
+    @Autowired
+    private JournalExcel journalExcel;
 
-    private static final String[] CHILD_IN_GROUPS_HEADERS = {
-            "Фамилия",
-            "Имя",
-            "Отчество",
-    };
-
-    private static final String[] ALL_CHILD_HEADERS = {
-            "Фамилия",
-            "Имя",
-            "Отчество",
-            "Родитель",
-            "Телефон родителя",
-            "Телефон ребенка",
-            "Почта ребенка",
-            "Школа",
-            "Класс",
-            "Адрес",
-            "Дата рождения",
-            "Направление",
-            "Время",
-            "Адрес",
-            "Преподаватель"
-    };
-
-    private static final String[] DIR_HEADERS = {
-            "Направление",
-            "Всего записано"
-    };
-
-    private static final String[] CHILD_BY_DIR_HEADERS = {
-            "Фамилия",
-            "Имя",
-            "Отчество",
-            "Родитель",
-            "Телефон родителя",
-            "Телефон ребенка",
-            "Почта ребенка",
-            "Школа",
-            "Класс",
-            "Адрес",
-            "Дата рождения",
-            "Время",
-            "Адрес",
-            "Преподаватель"
-    };
-
-    private static final String ALL_GROUPS_SHEET_NAME = "Группы";
-    private static final String CHILD_IN_GROUPS_SHEET_NAME = "Группа";
-    private static final String ALL_CHILD_SHEET_NAME = "Все школьники";
-    private static final String CHILD_BY_DIR_SHEET_NAME = "";
-
-    public static ByteArrayInputStream allGroupsToExcel(List<GroupEntity> list) {
+    public ByteArrayInputStream allGroupsToExcel() {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Sheet sheet = workbook.createSheet(ALL_GROUPS_SHEET_NAME);
-            sheet.setDefaultColumnWidth(16);
-
-            Row row = sheet.createRow(0);
-
-            initHeaders(ALL_GROUPS_HEADERS, row);
-
-            int rowInd = 1;
-
-            for (GroupEntity c : list) {
-                Row dataRow = sheet.createRow(rowInd);
-                rowInd++;
-                dataRow.createCell(0).setCellValue(String.valueOf(c.getDirectionId()));
-                dataRow.createCell(1).setCellValue(String.valueOf(c.getTeacherId())); //TODO add teacher's name mapping
-                dataRow.createCell(2).setCellValue(c.getTime());
-                dataRow.createCell(3).setCellValue(c.getAddress());
-                dataRow.createCell(4).setCellValue(c.getClassNumber());
-                dataRow.createCell(5).setCellValue(c.getListenersAmount());
-                dataRow.createCell(6).setCellValue(c.getApprovedListeners());
-            }
+            allGroupsExcel.fillRows(workbook);
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());
         } catch (IOException e) {
@@ -106,48 +38,9 @@ public class GroupExcelMapper {
         return null;
     }
 
-    public static ByteArrayInputStream childInGroupsToExcel(List<ChildEntity> child, Set<GroupEntity> groups) {
+    public ByteArrayInputStream childInGroupsToExcel(List<UUID> groupsIds) {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            for (GroupEntity group : groups) {
-                String sheetTitle = CHILD_IN_GROUPS_SHEET_NAME + " " + group.getDirectionId() + " " + group.getTeacherId() + group.getTime(); //TODO add teacher's name mapping
-
-                Sheet sheet = workbook.createSheet(sheetTitle);
-                sheet.setDefaultColumnWidth(16);
-
-                Row groupHeadersRow = sheet.createRow(0);
-
-                initHeaders(ALL_GROUPS_HEADERS, groupHeadersRow);
-
-                int rowInd = groupHeadersRow.getRowNum() + 1;
-
-                Row dataRow = sheet.createRow(rowInd);
-                rowInd++;
-
-                dataRow.createCell(0).setCellValue(String.valueOf(group.getDirectionId()));
-                dataRow.createCell(1).setCellValue(String.valueOf(group.getTeacherId())); //TODO add teacher's name mapping
-                dataRow.createCell(2).setCellValue(group.getTime());
-                dataRow.createCell(3).setCellValue(group.getAddress());
-                dataRow.createCell(4).setCellValue(group.getClassNumber());
-                dataRow.createCell(5).setCellValue(group.getListenersAmount());
-                dataRow.createCell(6).setCellValue(group.getApprovedListeners());
-
-                Row childHeadersRow = sheet.createRow(rowInd);
-
-                rowInd++;
-
-                initHeaders(CHILD_IN_GROUPS_HEADERS, childHeadersRow);
-
-                for (ChildEntity c : child) {
-                    if (!c.getGroupId().equals(group.getId())) {
-                        continue;
-                    }
-                    Row childDataRow = sheet.createRow(rowInd);
-                    rowInd++;
-                    childDataRow.createCell(0).setCellValue(c.getSurname());
-                    childDataRow.createCell(1).setCellValue(c.getName());
-                    childDataRow.createCell(2).setCellValue(c.getSecondName());
-                }
-            }
+            childInGroupsExcel.fillRows(workbook, groupsIds);
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());
         } catch (IOException e) {
@@ -157,37 +50,9 @@ public class GroupExcelMapper {
         return null;
     }
 
-    public static ByteArrayInputStream allChildToExcel(List<ChildEntity> child, Map<UUID, GroupEntity> groups) {
+    public ByteArrayInputStream allChildToExcel() {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Sheet sheet = workbook.createSheet(ALL_CHILD_SHEET_NAME);
-
-            sheet.setDefaultColumnWidth(16);
-            sheet.setColumnWidth(8, 2000);
-            Row row = sheet.createRow(0);
-
-            initHeaders(ALL_CHILD_HEADERS, row);
-
-            int rowInd = 1;
-
-            for (ChildEntity c : child) {
-                Row dataRow = sheet.createRow(rowInd);
-                rowInd++;
-                dataRow.createCell(0).setCellValue(c.getSurname());
-                dataRow.createCell(1).setCellValue(c.getName());
-                dataRow.createCell(2).setCellValue(c.getSecondName());
-                dataRow.createCell(3).setCellValue(c.getParent());
-                dataRow.createCell(4).setCellValue(c.getParentPhone());
-                dataRow.createCell(5).setCellValue(c.getPhone());
-                dataRow.createCell(6).setCellValue(c.getEmail());
-                dataRow.createCell(7).setCellValue(c.getSchool());
-                dataRow.createCell(8).setCellValue(c.getClassNumber());
-                dataRow.createCell(9).setCellValue(c.getAddress());
-                dataRow.createCell(10).setCellValue(c.getBirthDate().toString());
-                dataRow.createCell(11).setCellValue(String.valueOf(groups.get(c.getGroupId()).getDirectionId()));
-                dataRow.createCell(12).setCellValue(groups.get(c.getGroupId()).getTime());
-                dataRow.createCell(13).setCellValue(groups.get(c.getGroupId()).getAddress());
-                dataRow.createCell(14).setCellValue(String.valueOf(groups.get(c.getGroupId()).getTeacherId())); //TODO add teacher's name mapping
-            }
+            allChildrenExcel.fillRows(workbook);
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());
         } catch (IOException e) {
@@ -197,50 +62,9 @@ public class GroupExcelMapper {
         return null;
     }
 
-    public static ByteArrayInputStream childByDirToExcel(List<ChildEntity> child, Map<UUID, GroupEntity> groups, List<String> dirList) {
+    public ByteArrayInputStream childByDirToExcel(List<UUID> directionsIds) {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            for(String dir : dirList) {
-                Sheet sheet = workbook.createSheet(dir);
-
-                sheet.setDefaultColumnWidth(16);
-                sheet.setColumnWidth(8, 2000);
-                Row dirHeadersRow = sheet.createRow(0);
-
-                initHeaders(DIR_HEADERS, dirHeadersRow);
-
-                Row dirInfoRow = sheet.createRow(1);
-
-                Row childInfoRow = sheet.createRow(2);
-
-                initHeaders(CHILD_BY_DIR_HEADERS, childInfoRow);
-
-                int rowInd = 3;
-
-                for (ChildEntity c : child) {
-                    if (!groups.get(c.getGroupId()).getDirectionId().equals(dir)) { //TODO change directions comparing
-                        continue;
-                    }
-                    Row dataRow = sheet.createRow(rowInd);
-                    rowInd++;
-                    dataRow.createCell(0).setCellValue(c.getSurname());
-                    dataRow.createCell(1).setCellValue(c.getName());
-                    dataRow.createCell(2).setCellValue(c.getSecondName());
-                    dataRow.createCell(3).setCellValue(c.getParent());
-                    dataRow.createCell(4).setCellValue(c.getParentPhone());
-                    dataRow.createCell(5).setCellValue(c.getPhone());
-                    dataRow.createCell(6).setCellValue(c.getEmail());
-                    dataRow.createCell(7).setCellValue(c.getSchool());
-                    dataRow.createCell(8).setCellValue(c.getClassNumber());
-                    dataRow.createCell(9).setCellValue(c.getAddress());
-                    dataRow.createCell(10).setCellValue(c.getBirthDate().toString());
-                    dataRow.createCell(11).setCellValue(groups.get(c.getGroupId()).getTime());
-                    dataRow.createCell(12).setCellValue(groups.get(c.getGroupId()).getAddress());
-                    dataRow.createCell(13).setCellValue(String.valueOf(groups.get(c.getGroupId()).getTeacherId())); //TODO add teacher's name mapping
-                }
-
-                dirInfoRow.createCell(0).setCellValue(dir);
-                dirInfoRow.createCell(1).setCellValue(rowInd - 3);
-            }
+            childrenByDirExcel.fillRows(workbook, directionsIds);
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());
         } catch (IOException e) {
@@ -250,10 +74,15 @@ public class GroupExcelMapper {
         return null;
     }
 
-    private static void initHeaders(String[] headers, Row row) {
-        for (int i = 0; i < headers.length; i++) {
-            Cell cell = row.createCell(i);
-            cell.setCellValue(headers[i]);
+    public ByteArrayInputStream journalToExcel(List<UUID> groupIds) {
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            journalExcel.fillRows(workbook, groupIds);
+            workbook.write(out);
+            return new ByteArrayInputStream(out.toByteArray());
+        } catch (IOException e) {
+            e.fillInStackTrace();
+            System.out.println("EXCEL ERROR");
         }
+        return null;
     }
 }

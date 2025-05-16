@@ -4,19 +4,19 @@ import java.io.ByteArrayInputStream;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import lombok.RequiredArgsConstructor;
-import omsu.mim.imit.school.registry.data.entity.AttendanceEntity;
-import omsu.mim.imit.school.registry.data.entity.ChildEntity;
-import omsu.mim.imit.school.registry.data.entity.ClassEntity;
-import omsu.mim.imit.school.registry.data.entity.GroupEntity;
-import omsu.mim.imit.school.registry.data.repository.AttendanceRepository;
-import omsu.mim.imit.school.registry.data.repository.ChildRepository;
-import omsu.mim.imit.school.registry.data.repository.ClassRepository;
-import omsu.mim.imit.school.registry.data.repository.GroupRepository;
+import omsu.mim.imit.school.registry.data.entity.*;
+import omsu.mim.imit.school.registry.data.entity.enumeration.GroupStatus;
+import omsu.mim.imit.school.registry.data.entity.xml.HolidayEntity;
+import omsu.mim.imit.school.registry.data.repository.*;
+import omsu.mim.imit.school.registry.rest.dto.request.AddContractInfoRequest;
 import omsu.mim.imit.school.registry.rest.dto.request.CreateScheduleRequest;
 import omsu.mim.imit.school.registry.rest.mapper.GroupExcelMapper;
 import omsu.mim.imit.school.registry.util.exception.ObjectNotFoundException;
@@ -26,6 +26,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import static java.util.function.Predicate.not;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +37,14 @@ public class GroupService {
     private final GroupRepository repository;
     private final ChildRepository childRepository;
     private final ClassRepository classRepository;
+    private final TeacherRepository teacherRepository;
+    private final DirectionRepository directionRepository;
     private final AttendanceRepository attendanceRepository;
+    private final AssistantRepository assistantRepository;
+    private final ContractRepository contractRepository;
+    private final HolidayRepository holidayRepository;
+
+    private final GroupExcelMapper groupExcelMapper;
 
     public void create(GroupEntity entity) {
         repository.save(entity);
@@ -46,40 +56,28 @@ public class GroupService {
     }
 
     public ResponseEntity<Resource> downloadAllGroupsInfo() {
-        List<GroupEntity> groupEntities = repository.findAll();
-        return convertToResponse(GroupExcelMapper.allGroupsToExcel(groupEntities),
+        return convertToResponse(groupExcelMapper.allGroupsToExcel(),
                 "groups.xlsx");
     }
 
     public ResponseEntity<Resource> downloadChildInGroups(List<UUID> groupIds) {
-        List<GroupEntity> groupEntities = repository.findAllById(groupIds);
-        List<ChildEntity> childEntities = repository.getChildInGroups(groupIds);
-
-        var groupsSet = groupEntities.stream().collect(Collectors.toUnmodifiableSet());
-
-        return convertToResponse(GroupExcelMapper.childInGroupsToExcel(childEntities, groupsSet),
+        return convertToResponse(groupExcelMapper.childInGroupsToExcel(groupIds),
                 "child_in_group.xlsx");
     }
 
     public ResponseEntity<Resource> downloadAllChild() {
-        List<ChildEntity> childEntities = childRepository.findAll();
-        List<GroupEntity> groupEntities = repository.findAll();
-
-        var groupsByIdMap = groupEntities.stream().collect(Collectors.toMap(GroupEntity::getId, Function.identity()));
-
-        return convertToResponse(GroupExcelMapper.allChildToExcel(childEntities, groupsByIdMap),
-                "child.xlsx");
+        return convertToResponse(groupExcelMapper.allChildToExcel(),
+                "children.xlsx");
     }
 
-    public ResponseEntity<Resource> downloadChildByDir(String[] dirList) {
-        List<ChildEntity> childEntities = childRepository.findAll();
-        List<GroupEntity> groupEntities = repository.findAll();
-
-        var dirs = Arrays.stream(dirList).toList();
-        var groupsByIdMap = groupEntities.stream().collect(Collectors.toMap(GroupEntity::getId, Function.identity()));
-
-        return convertToResponse(GroupExcelMapper.childByDirToExcel(childEntities, groupsByIdMap, dirs),
+    public ResponseEntity<Resource> downloadChildByDir(List<UUID> dirIds) {
+        return convertToResponse(groupExcelMapper.childByDirToExcel(dirIds),
                 "childByDir.xlsx");
+    }
+
+    public ResponseEntity<Resource> downloadJournalForGroups(List<UUID> groupIds) {
+        return convertToResponse(groupExcelMapper.journalToExcel(groupIds),
+                "journal.xlsx");
     }
 
     public List<GroupEntity> findAll() {
@@ -109,6 +107,12 @@ public class GroupService {
         var time = group.getTime();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+        var holidays = holidayRepository.findAll()
+                .stream()
+                .map(HolidayEntity::getHoliday)
+                .toList();
+
         var date = simpleDateFormat.parse(request.getStartingDate());
 
         var nearestDate = getDate(dayOfWeek + ", " + time, date);
@@ -118,8 +122,20 @@ public class GroupService {
         oldClassesInGroup.forEach(classEntity -> attendanceRepository.deleteAllByClassId(classEntity.getId()));
         classRepository.deleteAllByGroupId(request.getGroupId());
 
-        for (int i = 0; i < request.getClassesAmount(); i++) {
-            classRepository.save(new ClassEntity(UUID.randomUUID(), request.getGroupId(), "", scheduleDateTime.plusWeeks(i)));
+        var classesAmount = request.getClassesAmount();
+
+        for (int i = 0; i < classesAmount; i++) {
+            if (holidays.contains(scheduleDateTime.plusWeeks(i).toLocalDate())) {
+                classesAmount++;
+                continue;
+            }
+            var classToSave = ClassEntity.builder()
+                    .id(UUID.randomUUID())
+                    .groupId(request.getGroupId())
+                    .theme("")
+                    .classDateTime(scheduleDateTime.plusWeeks(i))
+                    .build();
+            classRepository.save(classToSave);
         }
 
         List<ChildEntity> childInGroup = childRepository.getAllByGroupId(request.getGroupId());
@@ -150,7 +166,12 @@ public class GroupService {
     }
 
     private void createAttendance(ChildEntity child, ClassEntity classEntity) {
-        var attendance = new AttendanceEntity(UUID.randomUUID(), classEntity.getId(), child.getId(), "", null);
+        var attendance = AttendanceEntity.builder()
+                .id(UUID.randomUUID())
+                .classId(classEntity.getId())
+                .childId(child.getId())
+                .comment(null)
+                .build();
         attendanceRepository.save(attendance);
     }
 
@@ -178,6 +199,169 @@ public class GroupService {
     public ClassEntity setTheme(UUID classId, String theme) {
         classRepository.setTheme(classId, theme);
         return classRepository.findById(classId).get();
+    }
+
+    public GroupEntity addAssistants(UUID groupId, List<UUID> assistantsIds) {
+        var group = repository.findById(groupId).get();
+
+        var groupAssistants = group.getAssistantsIds();
+
+        List<UUID> currentAssistants;
+
+        if(groupAssistants == null || groupAssistants.isEmpty()) {
+            currentAssistants = List.of();
+        } else {
+            currentAssistants = Arrays.stream(group.getAssistantsIds().split(";")).map(UUID::fromString).toList();
+        }
+
+        var finalAssistants = Stream.concat(assistantsIds.stream(), currentAssistants.stream())
+                .distinct()
+                .toList();
+
+        var finalAssistantsStr = finalAssistants
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(";"));
+
+        repository.updateAssistants(groupId, finalAssistantsStr);
+        return repository.findById(groupId).get();
+    }
+
+    public GroupEntity removeAssistants(UUID groupId, List<UUID> assistantsIds) {
+        var group = repository.findById(groupId).get();
+
+        var groupAssistants = group.getAssistantsIds();
+
+        List<UUID> currentAssistants;
+
+        if(groupAssistants == null || groupAssistants.isEmpty()) {
+            currentAssistants = List.of();
+        } else {
+            currentAssistants = Arrays.stream(group.getAssistantsIds().split(";")).map(UUID::fromString).toList();
+        }
+
+        var finalAssistantsStr = currentAssistants
+                .stream()
+                .filter(not(assistantsIds::contains))
+                .map(String::valueOf)
+                .collect(Collectors.joining(";"));
+
+        repository.updateAssistants(groupId, finalAssistantsStr);
+        return repository.findById(groupId).get();
+    }
+
+
+    public List<AssistantEntity> getAssistants(UUID groupId) {
+
+        var group = repository.findById(groupId).get();
+
+        var groupAssistants = group.getAssistantsIds();
+
+        List<UUID> currentAssistants;
+
+        if(groupAssistants == null || groupAssistants.isEmpty()) {
+            currentAssistants = List.of();
+        } else {
+            currentAssistants = Arrays.stream(group.getAssistantsIds().split(";")).map(UUID::fromString).toList();
+        }
+
+        return assistantRepository.findAllById(currentAssistants);
+    }
+
+    public ContractEntity getContractByChild(UUID childId) {
+        return contractRepository.getByChildId(childId);
+    }
+
+    public ClassEntity changeClassDate(UUID classId, String newDate) {
+        var newLocalDate = strToLocalDate(newDate);
+
+        var oldClass = classRepository.findById(classId).get();
+
+        var oldTime = oldClass.getClassDateTime().toLocalTime();
+
+        classRepository.setDate(classId,  newLocalDate.atTime(oldTime));
+
+        return classRepository.findById(classId).get();
+    }
+
+    private LocalDate strToLocalDate(String str) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        LocalDate date = null;
+        try {
+             date = simpleDateFormat.parse(str).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public ClassEntity addClass(UUID groupId, String classDate) {
+        var date = strToLocalDate(classDate);
+
+        var group = repository.findById(groupId).get();
+
+        var newUuid = UUID.randomUUID();
+
+        var classToSave = ClassEntity.builder()
+                        .id(newUuid)
+                        .groupId(groupId)
+                        .theme("")
+                        .classDateTime(date.atTime(LocalTime.parse(group.getTime())))
+                        .build();
+
+        classRepository.save(classToSave);
+
+        List<ChildEntity> childInGroup = childRepository.getAllByGroupId(groupId);
+        List<ClassEntity> classesInGroup = classRepository.getClassesInGroup(groupId);
+
+        childInGroup
+                .forEach(child -> classesInGroup
+                        .forEach(classEntity -> createAttendance(child, classEntity))
+                );
+
+        return classRepository.findById(newUuid).get();
+    }
+
+    public GroupEntity changeStatus(UUID groupId, GroupStatus status) {
+        repository.updateStatus(groupId, status.name());
+        return repository.findById(groupId).get();
+    }
+
+    public ContractEntity addContractInfo(AddContractInfoRequest request) {
+        var contract = ContractEntity.builder()
+                        .conclusionDate(strToLocalDate(request.getConclusionDate()))
+                        .payerFullname(request.getPayerFullname())
+                        .childId(request.getChildId())
+                        .paymentAmount(request.getPaymentAmount())
+                        .paymentType(request.getPaymentType())
+                        .sale(request.getSale())
+                        .direction(request.getDirection())
+                .build();
+        contractRepository.save(contract);
+        return null;
+    }
+
+    public void addContractFile(MultipartFile file)  {
+        try {
+            contractRepository.addFile(file.getBytes());
+        } catch (Exception e) {
+            System.out.println("FILE SAVE ERROR");
+        }
+    }
+
+    public ResponseEntity<Resource> getContractFile(UUID contractId) {
+
+        var contract = contractRepository.findById(contractId).get();
+
+        return convertContractToResponse(new ByteArrayInputStream(contract.getFile()), "test.jpg");
+    }
+
+    private ResponseEntity<Resource> convertContractToResponse(ByteArrayInputStream data, String filename) {
+        InputStreamResource file = new InputStreamResource(data);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = " + filename)
+                .contentType(MediaType.parseMediaType("image/jpeg"))
+                .body(file);
     }
 
 }

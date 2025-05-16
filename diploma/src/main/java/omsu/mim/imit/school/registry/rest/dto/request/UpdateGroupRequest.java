@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -29,4 +30,6 @@ public class UpdateGroupRequest {
     private String time;
 
     private String dayOfWeek;
+
+    private List<UUID> assistantsIds;
 }

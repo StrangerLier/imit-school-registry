@@ -2,25 +2,21 @@ package omsu.mim.imit.school.registry.data.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
-@Entity(name = "group_info")
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupEntity {
-    @Id
-    @Column(name = "id")
-    private UUID id;
-
+@Entity(name = "group_info")
+public class GroupEntity extends BaseEntity {
     @Column(name = "class_number")
     private String classNumber;
 
@@ -44,4 +40,13 @@ public class GroupEntity {
 
     @Column(name = "day_of_week")
     private String dayOfWeek;
+
+    @Column(name = "assistants_ids")
+    private String assistantsIds;
+
+    @Column(name = "is_risky")
+    private Boolean isRisky;
+
+    @Column(name = "status")
+    private String status;
 }

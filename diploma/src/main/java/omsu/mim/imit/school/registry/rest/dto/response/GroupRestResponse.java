@@ -1,5 +1,6 @@
 package omsu.mim.imit.school.registry.rest.dto.response;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,4 +29,10 @@ public class GroupRestResponse {
     private String time;
 
     private String dayOfWeek;
+
+    private List<UUID> assistantsIds;
+
+    private String status;
+
+    private Boolean isRisky;
 }

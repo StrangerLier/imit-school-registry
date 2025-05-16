@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +35,16 @@ public interface ClassRepository extends JpaRepository<ClassEntity, UUID> {
     """)
     void setTheme(@Param("classId") UUID classId,
                   @Param("theme") String theme);
+
+    @Modifying
+    @Transactional
+    @Query("""
+            update class
+            set classDateTime = :classDateTime
+            where id = :classId
+    """)
+    void setDate(@Param("classId") UUID classId,
+                  @Param("classDateTime") LocalDateTime classDateTime);
 }
 
 

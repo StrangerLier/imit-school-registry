@@ -1,0 +1,1 @@
+ALTER TABLE group_info ADD COLUMN assistants_ids varchar(150);

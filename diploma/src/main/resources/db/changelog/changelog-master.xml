@@ -20,4 +20,10 @@
     <include file="sql/16_create_table_class.sql" relativeToChangelogFile="true" />
     <include file="sql/17_alter_group_for_classes.sql" relativeToChangelogFile="true" />
     <include file="sql/18_create_table_attendance.sql" relativeToChangelogFile="true" />
+    <include file="sql/20_create_contract_table.sql" relativeToChangelogFile="true" />
+    <include file="sql/19_add_assistants_ids_to_group.sql" relativeToChangelogFile="true" />
+    <include file="sql/21_add_group_risky.sql" relativeToChangelogFile="true" />
+    <include file="sql/22_create_holiday_table.sql" relativeToChangelogFile="true" />
+    <include file="sql/23_add_group_status.sql" relativeToChangelogFile="true" />
+    <include file="sql/24_add_files_to_contract.sql" relativeToChangelogFile="true" />
 </databaseChangeLog>

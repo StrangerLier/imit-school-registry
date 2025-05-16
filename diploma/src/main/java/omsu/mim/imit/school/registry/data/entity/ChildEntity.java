@@ -4,28 +4,23 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
 import java.time.LocalDate;
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import omsu.mim.imit.school.registry.data.entity.enumeration.ChildStatus;
 
 @Getter
 @Setter
-@Builder
-@Entity(name = "child")
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChildEntity {
-
-    @Id
-    @Column(name = "id")
-    private UUID id;
-
+@Entity(name = "child")
+public class ChildEntity extends BaseEntity {
     @Column(name = "name")
     private String name;
 

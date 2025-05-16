@@ -2,22 +2,18 @@ package omsu.mim.imit.school.registry.data.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
-@Entity(name = "attendance")
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttendanceEntity {
-    @Id
-    @Column(name = "id")
-    private UUID id;
-
+@Entity(name = "attendance")
+public class AttendanceEntity extends BaseEntity {
     @Column(name = "class_id")
     private UUID classId;
 

@@ -32,7 +32,8 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
                 listenersAmount = :#{#group.listenersAmount},
                 approvedListeners = :#{#group.approvedListeners},
                 time = :#{#group.time},
-                dayOfWeek = :#{#group.dayOfWeek}
+                dayOfWeek = :#{#group.dayOfWeek},
+                assistantsIds = :assistantsIds
             where id = :#{#group.id}
     """)
     void update(@Param("group") GroupEntity group);
@@ -41,5 +42,28 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
             select c from child c where groupId in (:#{#groupIds})
     """)
     List<ChildEntity> getChildInGroups(List<UUID> groupIds);
+
+    @Query("""
+            select g from group_info g where directionId in (:#{#directionsIds})
+    """)
+    List<GroupEntity> getByDirectionsIds(List<UUID> directionsIds);
+
+    @Modifying
+    @Transactional
+    @Query("""
+            update group_info
+            set assistantsIds = :assistantsIds
+            where id = :groupId
+    """)
+    void updateAssistants(UUID groupId, String assistantsIds);
+
+    @Modifying
+    @Transactional
+    @Query("""
+            update group_info
+            set status = :status
+            where id = :groupId
+    """)
+    void updateStatus(UUID groupId, String status);
 
 }

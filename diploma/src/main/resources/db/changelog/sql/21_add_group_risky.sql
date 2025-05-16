@@ -1,0 +1,1 @@
+ALTER TABLE group_info ADD COLUMN is_risky bool;

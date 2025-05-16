@@ -82,5 +82,15 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getDirections());
     }
 
+    @PostMapping("/admin/addHolidays")
+    public void addHolidays(@RequestParam String[] holidays) {
+        adminService.addHoliday(holidays);
+    }
+
+    @DeleteMapping("/admin/removeHolidays")
+    public void removeHolidays(@RequestParam String[] holidaysIds)
+    {
+        adminService.removeHolidays(holidaysIds);
+    }
 
 }

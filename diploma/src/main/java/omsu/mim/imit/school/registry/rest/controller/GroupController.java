@@ -5,19 +5,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import omsu.mim.imit.school.registry.buiseness.mapper.AssistantMapper;
 import omsu.mim.imit.school.registry.buiseness.mapper.GroupMapper;
 import omsu.mim.imit.school.registry.buiseness.service.GroupService;
+import omsu.mim.imit.school.registry.data.entity.enumeration.GroupStatus;
+import omsu.mim.imit.school.registry.data.repository.AssistantRepository;
+import omsu.mim.imit.school.registry.rest.dto.request.AddContractInfoRequest;
 import omsu.mim.imit.school.registry.rest.dto.request.CreateGroupRequest;
 import omsu.mim.imit.school.registry.rest.dto.request.CreateScheduleRequest;
 import omsu.mim.imit.school.registry.rest.dto.request.UpdateGroupRequest;
-import omsu.mim.imit.school.registry.rest.dto.response.AttendanceRestResponse;
-import omsu.mim.imit.school.registry.rest.dto.response.ChildRestResponse;
-import omsu.mim.imit.school.registry.rest.dto.response.ClassRestResponse;
-import omsu.mim.imit.school.registry.rest.dto.response.GroupRestResponse;
-import omsu.mim.imit.school.registry.rest.mapper.AttendanceRestResponseMapper;
-import omsu.mim.imit.school.registry.rest.mapper.ChildRestResponseMapper;
-import omsu.mim.imit.school.registry.rest.mapper.ClassRestResponseMapper;
-import omsu.mim.imit.school.registry.rest.mapper.GroupRestResponseMapper;
+import omsu.mim.imit.school.registry.rest.dto.response.*;
+import omsu.mim.imit.school.registry.rest.mapper.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +36,11 @@ public class GroupController {
     private final ChildRestResponseMapper childRestResponseMapper;
     private final ClassRestResponseMapper classRestResponseMapper;
     private final AttendanceRestResponseMapper attendanceRestResponseMapper;
+    private final ContractRestResponseMapper contractRestResponseMapper;
+
+    private final AssistantRepository assistantRepository;
+    private final AssistantMapper assistantMapper;
+    private final AssistantRestResponseMapper assistantRestResponseMapper;
 
     @PostMapping("/group/v1/create")
     public void create(@RequestBody CreateGroupRequest request) {
@@ -70,8 +74,15 @@ public class GroupController {
     }
 
     @GetMapping("/group/v1/downloadByDir")
-    public ResponseEntity<Resource> downloadAllChild(@RequestParam (value="dirList") String[] dirList) {
-        return service.downloadChildByDir(dirList);
+    public ResponseEntity<Resource> downloadAllChild(@RequestParam (value="dirIds") String[] dirIds) {
+        var dirIdsList = Arrays.stream(dirIds).map(UUID::fromString).toList();
+        return service.downloadChildByDir(dirIdsList);
+    }
+
+    @GetMapping("/group/v1/downloadJournal")
+    public ResponseEntity<Resource> downloadJournal(@RequestParam (value="groupIds") String[] groupIds) {
+        var groupIdsList = Arrays.stream(groupIds).map(UUID::fromString).toList();
+        return service.downloadJournalForGroups(groupIdsList);
     }
 
     @PostMapping("/group/v1/createJournal")
@@ -105,5 +116,63 @@ public class GroupController {
     private ResponseEntity<ClassRestResponse> setTheme(@RequestParam (value = "classId") UUID classId,
                                                        @RequestParam (value="theme") String theme) {
         return ResponseEntity.ok(classRestResponseMapper.map(service.setTheme(classId, theme)));
+    }
+
+    @PostMapping("/group/v1/addAssistants")
+    private ResponseEntity<GroupRestResponse> addAssistant(@RequestParam (value = "groupId") UUID groupId,
+                                                            @RequestParam (value = "assistantsIds") String[] assistantsIds) {
+        var assistantsIdsList = Arrays.stream(assistantsIds).map(UUID::fromString).toList();
+        return ResponseEntity.ok(groupRestResponseMapper.map(service.addAssistants(groupId, assistantsIdsList)));
+    }
+
+    @PostMapping("/group/v1/removeAssistants")
+    private ResponseEntity<GroupRestResponse> removeAssistants(@RequestParam (value = "groupId") UUID groupId,
+                                                           @RequestParam (value = "assistantsIds") String[] assistantsIds) {
+        var assistantsIdsList = Arrays.stream(assistantsIds).map(UUID::fromString).toList();
+        return ResponseEntity.ok(groupRestResponseMapper.map(service.removeAssistants(groupId, assistantsIdsList)));
+    }
+
+    @GetMapping("/group/v1/getAssistants")
+    private ResponseEntity<List<AssistantRestResponse>> getAssistants(@RequestParam (value = "groupId") UUID groupId) {
+        return ResponseEntity.ok(assistantRestResponseMapper.mapAll(service.getAssistants(groupId)));
+    }
+
+    @PostMapping("/group/v1/addContractInfo")
+    private ResponseEntity<ContractRestResponse> addContractInfo(@RequestBody AddContractInfoRequest request) {
+        return ResponseEntity.ok(contractRestResponseMapper.map(service.addContractInfo(request)));
+    }
+
+    @PostMapping("/group/v1/addContractFile")
+    private void addContractFile(@RequestParam("contractId") UUID contractId,
+                                 @RequestParam("file") MultipartFile file) {
+        service.addContractFile(file);
+    }
+
+    @GetMapping("/group/v1/contractFile")
+    private ResponseEntity<Resource> getContractFile(@RequestParam("contractId") UUID contractId){
+        return service.getContractFile(contractId);
+    }
+
+    @GetMapping("/group/v1/contractForChild")
+    private ResponseEntity<ContractRestResponse> getContractForChild(@RequestParam (value = "childId") UUID childId){
+        return ResponseEntity.ok(contractRestResponseMapper.map(service.getContractByChild(childId)));
+    }
+
+    @PostMapping("/group/v1/changeClassDate")
+    private ResponseEntity<ClassRestResponse> changeClassDate(@RequestParam (value = "classId") UUID classId,
+                                                       @RequestParam (value="newDate") String newDate) {
+        return ResponseEntity.ok(classRestResponseMapper.map(service.changeClassDate(classId, newDate)));
+    }
+
+    @PostMapping("/group/v1/addClass")
+    private ResponseEntity<ClassRestResponse> addClass(@RequestParam (value = "groupId") UUID groupId,
+                                                              @RequestParam (value="classDate") String classDate) {
+        return ResponseEntity.ok(classRestResponseMapper.map(service.addClass(groupId, classDate)));
+    }
+
+    @PostMapping("/group/v1/changeStatus")
+    private ResponseEntity<GroupRestResponse> changeStatus(@RequestParam (value = "groupId") UUID groupId,
+                                                           @RequestParam (value = "status") String status) {
+        return ResponseEntity.ok(groupRestResponseMapper.map(service.changeStatus(groupId, GroupStatus.valueOf(status))));
     }
 }
