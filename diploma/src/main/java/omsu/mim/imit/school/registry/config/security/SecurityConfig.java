@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//    private final CustomUserDetailsService userDetailsService;
     private final JwtFilter jwtFilter;
 
     @Bean
@@ -29,32 +28,19 @@ public class SecurityConfig {
                     auth -> {
                         auth.requestMatchers("/admin/**").hasRole(SecurityConstants.ADMIN_ROLE)
                             .requestMatchers("/group/**").hasRole(SecurityConstants.ADMIN_ROLE)
+                            .requestMatchers("/group/v1/setAttendance").hasAnyRole(SecurityConstants.ASSISTANT_ROLE, SecurityConstants.TEACHER_ROLE)
+                            .requestMatchers("/group/v1/setTheme").hasAnyRole(SecurityConstants.ASSISTANT_ROLE, SecurityConstants.TEACHER_ROLE)
+                            .requestMatchers("/group/v1/setAssistantAttendance").hasRole(SecurityConstants.ASSISTANT_ROLE)
+                            .requestMatchers("/parent/v1/children").hasRole(SecurityConstants.PARENT_ROLE)
                             .requestMatchers("/auth/**").permitAll()
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                             .anyRequest().permitAll();
                     }
                 )
-//                .formLogin(login -> login
-//                    .loginPage("https://dip.rkkm.space/auth")
-//                    .defaultSuccessUrl("https://dip.rkkm.space/students")
-//                    .permitAll()
-//                )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                     .logoutUrl("/logout")
                     .permitAll())
                 .build();
     }
-
-//    @Bean
-//    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-//        AuthenticationManagerBuilder authManagerBuilder =
-//                http.getSharedObject(AuthenticationManagerBuilder.class);
-//
-//        authManagerBuilder
-//                .userDetailsService(userDetailsService)
-//                .passwordEncoder(passwordEncoder());
-//
-//        return authManagerBuilder.build();
-//    }
 }

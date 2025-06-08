@@ -121,4 +121,10 @@ public class ChildService {
         groupRepository.save(oldGroup);
         return childRestResponseMapper.map(child);
     }
+
+    public List<ChildRestResponse> findAll(List<UUID> childrenId) {
+        return childRestResponseMapper.mapAll(
+            childRepository.findAllById(childrenId)
+        );
+    }
 }

@@ -5,15 +5,19 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import omsu.mim.imit.school.registry.buiseness.service.AdminService;
 import omsu.mim.imit.school.registry.buiseness.service.ChildService;
+import omsu.mim.imit.school.registry.buiseness.service.security.AuthenticationService;
 import omsu.mim.imit.school.registry.data.entity.enumeration.ChildStatus;
 import omsu.mim.imit.school.registry.rest.dto.request.AssistantRequestDto;
+import omsu.mim.imit.school.registry.rest.dto.request.CreateUserRequest;
 import omsu.mim.imit.school.registry.rest.dto.request.DirectionRequestDto;
 import omsu.mim.imit.school.registry.rest.dto.request.FilterChildrenRequestDto;
+import omsu.mim.imit.school.registry.rest.dto.request.JwtTokenRequest;
 import omsu.mim.imit.school.registry.rest.dto.request.TeacherRequestDto;
 import omsu.mim.imit.school.registry.rest.dto.response.AssistantRestResponse;
 import omsu.mim.imit.school.registry.rest.dto.response.ChildRestResponse;
 import omsu.mim.imit.school.registry.rest.dto.response.DirectionRestResponse;
 import omsu.mim.imit.school.registry.rest.dto.response.TeacherRestResponse;
+import omsu.mim.imit.school.registry.util.constant.SecurityConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     private final ChildService childService;
     private final AdminService adminService;
+    private final AuthenticationService authenticationService;
 
     @GetMapping("/admin/v1/filter")
     public ResponseEntity<List<ChildRestResponse>> filter(FilterChildrenRequestDto request) {
@@ -91,6 +96,12 @@ public class AdminController {
     public void removeHolidays(@RequestParam String[] holidaysIds)
     {
         adminService.removeHolidays(holidaysIds);
+    }
+
+    @DeleteMapping("/admin/createUser")
+    public void createParent(@RequestBody CreateUserRequest request)
+    {
+        authenticationService.createUserWithRole(request);
     }
 
 }
