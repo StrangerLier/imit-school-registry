@@ -26,4 +26,5 @@
     <include file="sql/22_create_holiday_table.sql" relativeToChangelogFile="true" />
     <include file="sql/23_add_group_status.sql" relativeToChangelogFile="true" />
     <include file="sql/24_add_files_to_contract.sql" relativeToChangelogFile="true" />
+    <include file="sql/25_alter_table_teacher_and_assistant_add_column.sql" relativeToChangelogFile="true" />
 </databaseChangeLog>

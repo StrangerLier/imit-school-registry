@@ -32,4 +32,7 @@ public class AssistantEntity extends BaseEntity {
 
     @Column(name = "work_place")
     private String workPlace;
+
+    @Column(name = "rating")
+    private Integer rating;
 }
