@@ -165,12 +165,6 @@ public class GroupController {
         return ResponseEntity.ok(classRestResponseMapper.map(service.addClass(groupId, classDate)));
     }
 
-    @PostMapping("/group/v1/changeStatus")
-    private ResponseEntity<GroupRestResponse> changeStatus(@RequestParam (value = "groupId") UUID groupId,
-                                                           @RequestParam (value = "status") String status) {
-        return ResponseEntity.ok(groupRestResponseMapper.map(service.changeStatus(groupId, GroupStatus.valueOf(status))));
-    }
-
     @GetMapping("/group/v1/journalForGroup")
     private ResponseEntity<JournalRestResponse> getJournalForGroup(@RequestParam(value = "groupId") UUID groupId) {
         return ResponseEntity.ok(service.getJournalForGroup(groupId));
