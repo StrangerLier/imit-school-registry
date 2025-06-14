@@ -47,10 +47,12 @@ public class AdminService {
 
     public void registerTeacher(TeacherRequestDto request) {
         teacherRepository.save(teacherMapper.map(request));
+        request.getDesiredAssistantIds().forEach(this::increaseAssistantRating);
     }
 
     public void registerAssistant(AssistantRequestDto request) {
         assistantRepository.save(assistantMapper.map(request));
+        request.getDesiredTeacherIds().forEach(this::increaseTeacherRating);
     }
 
     public void addDirection(DirectionRequestDto request) {
@@ -96,5 +98,25 @@ public class AdminService {
                 .map(UUID::fromString)
                 .toList();
         holidayRepository.deleteAllById(holidaysToRemove);
+    }
+
+    private void increaseTeacherRating(UUID teacherId) {
+        var teacherOpt = teacherRepository.findById(teacherId);
+
+        if(teacherOpt.isPresent()) {
+            var teacher = teacherOpt.get();
+            teacher.setRating(teacher.getRating() + 1);
+            teacherRepository.save(teacher);
+        }
+    }
+
+    private void increaseAssistantRating(UUID assistantId) {
+        var assistantOpt = assistantRepository.findById(assistantId);
+
+        if(assistantOpt.isPresent()) {
+            var assistant = assistantOpt.get();
+            assistant.setRating(assistant.getRating() + 1);
+            assistantRepository.save(assistant);
+        }
     }
 }
