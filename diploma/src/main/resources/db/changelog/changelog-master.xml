@@ -26,7 +26,8 @@
     <include file="sql/22_create_holiday_table.sql" relativeToChangelogFile="true" />
     <include file="sql/23_add_group_status.sql" relativeToChangelogFile="true" />
     <include file="sql/24_add_files_to_contract.sql" relativeToChangelogFile="true" />
-    <include file="sql/25_create_risks_table.sql" relativeToChangelogFile="true" />
-    <include file="sql/26_add_comment_to_risk.sql" relativeToChangelogFile="true" />
-    <include file="sql/27_alter_risk_for_second_id.sql" relativeToChangelogFile="true" />
+    <include file="sql/25_alter_table_teacher_and_assistant_add_column.sql" relativeToChangelogFile="true" />
+    <include file="sql/26_create_risks_table.sql" relativeToChangelogFile="true" />
+    <include file="sql/27_add_comment_to_risk.sql" relativeToChangelogFile="true" />
+    <include file="sql/28_alter_risk_for_second_id.sql" relativeToChangelogFile="true" />
 </databaseChangeLog>
