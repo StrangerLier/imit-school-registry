@@ -69,7 +69,7 @@ public class JournalExcel extends BaseExcel {
 
             allGroupsExcel.fillRow(sheet, group, teachers, directions);
 
-            initHeaders(sheet, HEADERS, classes);
+            initHeaders(sheet, HEADERS, classesByGroup);
 
             var childrenByGroup = children.stream()
                     .filter(child -> child.getGroupId().equals(group.getId()))

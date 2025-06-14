@@ -48,6 +48,11 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
     """)
     List<GroupEntity> getByDirectionsIds(List<UUID> directionsIds);
 
+    @Query("""
+            select g from group_info g where teacherId in (:#{#teacherIds})
+    """)
+    List<GroupEntity> getByTeacherIds(List<UUID> teacherIds);
+
     @Modifying
     @Transactional
     @Query("""

@@ -1,0 +1,1 @@
+ALTER TABLE risk ADD COLUMN comment varchar(200);

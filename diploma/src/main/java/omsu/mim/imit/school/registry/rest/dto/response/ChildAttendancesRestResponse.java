@@ -1,7 +1,5 @@
 package omsu.mim.imit.school.registry.rest.dto.response;
 
-import java.time.LocalDate;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,11 +7,15 @@ import lombok.NoArgsConstructor;
 import omsu.mim.imit.school.registry.data.entity.enumeration.ChildStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChildRestResponse {
+public class ChildAttendancesRestResponse {
 
     private UUID id;
     private UUID groupId;
@@ -44,4 +46,6 @@ public class ChildRestResponse {
     private String duplicateKey;
 
     private ChildStatus status;
+
+    private List<AttendanceRestResponse> attendances;
 }

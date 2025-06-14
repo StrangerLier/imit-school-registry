@@ -44,9 +44,9 @@ public class GroupEntity extends BaseEntity {
     @Column(name = "assistants_ids")
     private String assistantsIds;
 
-    @Column(name = "is_risky")
-    private Boolean isRisky;
-
     @Column(name = "status")
     private String status;
+
+    @Column(name = "is_risky")
+    private Boolean isRisky;
 }

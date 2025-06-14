@@ -18,7 +18,9 @@ import omsu.mim.imit.school.registry.data.entity.xml.HolidayEntity;
 import omsu.mim.imit.school.registry.data.repository.*;
 import omsu.mim.imit.school.registry.rest.dto.request.AddContractInfoRequest;
 import omsu.mim.imit.school.registry.rest.dto.request.CreateScheduleRequest;
-import omsu.mim.imit.school.registry.rest.mapper.GroupExcelMapper;
+import omsu.mim.imit.school.registry.rest.dto.response.ChildAttendancesRestResponse;
+import omsu.mim.imit.school.registry.rest.dto.response.JournalRestResponse;
+import omsu.mim.imit.school.registry.rest.mapper.*;
 import omsu.mim.imit.school.registry.util.exception.ObjectNotFoundException;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -45,6 +47,9 @@ public class GroupService {
     private final HolidayRepository holidayRepository;
 
     private final GroupExcelMapper groupExcelMapper;
+
+    private final ClassRestResponseMapper classRestResponseMapper;
+    private final AttendanceRestResponseMapper attendanceRestResponseMapper;
 
     public void create(GroupEntity entity) {
         repository.save(entity);
@@ -364,4 +369,63 @@ public class GroupService {
                 .body(file);
     }
 
+    public JournalRestResponse getJournalForGroup(UUID groupId) {
+        var children = childRepository.getAllByGroupId(groupId);
+        var classes = classRepository.getClassesInGroup(groupId);
+        var attendances = classes
+                .stream()
+                .flatMap(clas -> attendanceRepository.getAllByClassId(clas.getId()).stream())
+                .toList();
+
+        var classesSortByDate = classes
+                .stream()
+                .sorted(Comparator.comparing(ClassEntity::getClassDateTime))
+                .toList();
+
+        var childrenAttendances = children
+                .stream()
+                .map(child -> {
+                    var attendancesByChild = attendances
+                            .stream()
+                            .filter(attendance -> attendance.getChildId().equals(child.getId()))
+                            .toList();
+
+                    List<AttendanceEntity> attendanceEntities = new ArrayList<>();
+
+                    classesSortByDate
+                            .forEach(classEntity -> {
+                                var attendance = attendancesByChild
+                                        .stream()
+                                        .filter(attendanceEntity -> attendanceEntity.getClassId().equals(classEntity.getId()))
+                                        .findFirst().get();
+                                attendanceEntities.add(attendance);
+                            });
+
+                    return ChildAttendancesRestResponse.builder()
+                            .id(child.getId())
+                            .groupId(child.getGroupId())
+                            .name(child.getName())
+                            .secondName(child.getSecondName())
+                            .surname(child.getSurname())
+                            .birthDate(child.getBirthDate())
+                            .address(child.getAddress())
+                            .school(child.getSchool())
+                            .classNumber(child.getClassNumber())
+                            .email(child.getEmail())
+                            .phone(child.getPhone())
+                            .parent(child.getParent())
+                            .parentPhone(child.getParentPhone())
+                            .duplicateKey(child.getDuplicateKey())
+                            .status(child.getStatus())
+                            .attendances(attendanceRestResponseMapper.mapAll(attendanceEntities))
+                            .build();
+                })
+                .toList();
+
+        return JournalRestResponse
+                .builder()
+                .classes(classRestResponseMapper.mapAll(classesSortByDate))
+                .childrenAttendances(childrenAttendances)
+                .build();
+    }
 }
