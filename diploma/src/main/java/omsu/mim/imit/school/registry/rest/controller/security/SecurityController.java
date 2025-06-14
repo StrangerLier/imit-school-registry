@@ -5,6 +5,7 @@ import omsu.mim.imit.school.registry.buiseness.service.security.AuthenticationSe
 import omsu.mim.imit.school.registry.rest.dto.request.JwtTokenRequest;
 import omsu.mim.imit.school.registry.rest.dto.response.JwtTokenResponse;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,7 +15,7 @@ public class SecurityController {
     private final AuthenticationService service;
 
     @PostMapping("/auth")
-    public JwtTokenResponse getToken(JwtTokenRequest request) {
+    public JwtTokenResponse getToken(@RequestBody JwtTokenRequest request) {
         return service.getToken(request);
     }
 }

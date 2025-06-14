@@ -33,7 +33,7 @@ public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
                 approvedListeners = :#{#group.approvedListeners},
                 time = :#{#group.time},
                 dayOfWeek = :#{#group.dayOfWeek},
-                assistantsIds = :assistantsIds
+                assistantsIds = :#{#group.assistantsIds}
             where id = :#{#group.id}
     """)
     void update(@Param("group") GroupEntity group);
