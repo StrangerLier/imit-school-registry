@@ -109,7 +109,9 @@ public class GroupService {
     public void createJournal(CreateScheduleRequest request) throws ParseException {
         var group = repository.findById(request.getGroupId()).get();
         var dayOfWeek = group.getDayOfWeek();
+        System.out.println(STR."DayOfWeek: \{dayOfWeek}");
         var time = group.getTime();
+        System.out.println(STR."Time: \{time}");
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -156,6 +158,7 @@ public class GroupService {
         long MILLISECONDS_PER_WEEK = 7L * 24 * 60 * 60 * 1000;
         SimpleDateFormat sdf = new SimpleDateFormat("E, H:mm");
         Date date = sdf.parse(input, new ParsePosition(0));
+        System.out.println(STR."parsed date: \{date.toString()}");
 
         Calendar c = Calendar.getInstance();
         c.setTime(date1);
