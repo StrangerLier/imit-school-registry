@@ -10,10 +10,7 @@ import omsu.mim.imit.school.registry.buiseness.mapper.GroupMapper;
 import omsu.mim.imit.school.registry.buiseness.service.GroupService;
 import omsu.mim.imit.school.registry.data.entity.enumeration.GroupStatus;
 import omsu.mim.imit.school.registry.data.repository.AssistantRepository;
-import omsu.mim.imit.school.registry.rest.dto.request.AddContractInfoRequest;
-import omsu.mim.imit.school.registry.rest.dto.request.CreateGroupRequest;
-import omsu.mim.imit.school.registry.rest.dto.request.CreateScheduleRequest;
-import omsu.mim.imit.school.registry.rest.dto.request.UpdateGroupRequest;
+import omsu.mim.imit.school.registry.rest.dto.request.*;
 import omsu.mim.imit.school.registry.rest.dto.response.*;
 import omsu.mim.imit.school.registry.rest.mapper.*;
 import org.springframework.http.ResponseEntity;
@@ -106,10 +103,8 @@ public class GroupController {
     }
 
     @PostMapping("/group/v1/setAttendance")
-    private ResponseEntity<AttendanceRestResponse> setAttendance(@RequestParam (value = "attendanceId") UUID attendanceId,
-                                                                 @RequestParam (value="isAttend") Boolean isAttend,
-                                                                 @RequestParam (value = "comment") String comment) {
-        return ResponseEntity.ok(attendanceRestResponseMapper.map(service.setAttendance(attendanceId, isAttend, comment)));
+    private ResponseEntity<AttendanceRestResponse> setAttendance(@RequestBody SetAttendanceRequest request) {
+        return ResponseEntity.ok(attendanceRestResponseMapper.map(service.setAttendance(request.getId(), request.getIsAttend(), request.getComment())));
     }
 
     @PostMapping("/group/v1/setTheme")
