@@ -156,7 +156,7 @@ public class GroupService {
 
     private Date getDate(String input, Date date1) {
         long MILLISECONDS_PER_WEEK = 7L * 24 * 60 * 60 * 1000;
-        SimpleDateFormat sdf = new SimpleDateFormat("E, H:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("E, H:mm", Locale.of("ru"));
         Date date = sdf.parse(input, new ParsePosition(0));
         System.out.println("parsed date: " + date.toString());
 

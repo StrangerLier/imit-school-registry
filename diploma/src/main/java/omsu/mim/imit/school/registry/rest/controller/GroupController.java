@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import omsu.mim.imit.school.registry.buiseness.mapper.AssistantMapper;
 import omsu.mim.imit.school.registry.buiseness.mapper.GroupMapper;
 import omsu.mim.imit.school.registry.buiseness.service.GroupService;
-import omsu.mim.imit.school.registry.data.entity.enumeration.GroupStatus;
 import omsu.mim.imit.school.registry.data.repository.AssistantRepository;
 import omsu.mim.imit.school.registry.rest.dto.request.*;
 import omsu.mim.imit.school.registry.rest.dto.response.*;

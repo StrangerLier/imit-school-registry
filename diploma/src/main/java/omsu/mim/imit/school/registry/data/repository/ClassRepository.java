@@ -16,7 +16,7 @@ public interface ClassRepository extends JpaRepository<ClassEntity, UUID> {
     @Modifying
     @Transactional
     @Query("""
-            delete class
+            delete from class
             where groupId = :groupId
     """)
     void deleteAllByGroupId(@Param("groupId") UUID groupId);

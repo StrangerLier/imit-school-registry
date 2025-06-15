@@ -15,7 +15,7 @@ public interface AttendanceRepository extends JpaRepository<AttendanceEntity, UU
     @Modifying
     @Transactional
     @Query("""
-            delete attendance
+            delete from attendance
             where classId = :classId
     """)
     void deleteAllByClassId(@Param("classId") UUID classId);
