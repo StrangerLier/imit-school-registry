@@ -13,4 +13,11 @@ public interface RiskRepository extends JpaRepository<RiskEntity, UUID> {
             select r from risk r where groupId in (:#{#groupIds})
     """)
     List<RiskEntity> findByGroupIds(List<UUID> groupIds);
+
+    @Query("""
+            select r from risk r 
+            where reason = 'UNFILLED_GROUP'
+    """)
+    List<RiskEntity> getUnfilledGroupRisks();
+
 }

@@ -33,6 +33,7 @@ public class GroupController {
     private final ClassRestResponseMapper classRestResponseMapper;
     private final AttendanceRestResponseMapper attendanceRestResponseMapper;
     private final ContractRestResponseMapper contractRestResponseMapper;
+    private final RiskRestResponseMapper riskRestResponseMapper;
 
     private final AssistantRepository assistantRepository;
     private final AssistantMapper assistantMapper;
@@ -167,5 +168,10 @@ public class GroupController {
     @GetMapping("/group/v1/journalForGroup")
     private ResponseEntity<JournalRestResponse> getJournalForGroup(@RequestParam(value = "groupId") UUID groupId) {
         return ResponseEntity.ok(service.getJournalForGroup(groupId));
+    }
+
+    @GetMapping("/group/v1/unfilledGroupRisks")
+    private ResponseEntity<List<RiskRestResponse>> getUnfilledGroupRisks() {
+        return ResponseEntity.ok(riskRestResponseMapper.mapAll(service.getUnfilledGroupsRisks()));
     }
 }

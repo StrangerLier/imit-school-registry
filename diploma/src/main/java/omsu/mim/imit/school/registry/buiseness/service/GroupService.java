@@ -45,6 +45,7 @@ public class GroupService {
     private final AssistantRepository assistantRepository;
     private final ContractRepository contractRepository;
     private final HolidayRepository holidayRepository;
+    private final RiskRepository riskRepository;
 
     private final GroupExcelMapper groupExcelMapper;
 
@@ -431,4 +432,9 @@ public class GroupService {
                 .childrenAttendances(childrenAttendances)
                 .build();
     }
+
+    public List<RiskEntity> getUnfilledGroupsRisks() {
+        return riskRepository.getUnfilledGroupRisks();
+    }
+
 }
