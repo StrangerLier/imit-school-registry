@@ -26,14 +26,10 @@ public class RiskProcessor {
     private final DirectionRepository directionRepository;
 
     private static final String UNFILLED_GROUP_REASON = "UNFILLED_GROUP";
-    private static final String TEACHER_DAY_TIME_CONFLICT_REASON = "TEACHER_DAY_TIME_CONFLICT";
     private static final String OVERLOADED_TEACHER_REASON = "OVERLOADED_TEACHER";
+    private static final String SAME_TIME_GROUPS_REASON = "SAME_TIME_GROUPS";
 
     private static final BaseExcel baseExcel = new BaseExcel();
-
-    //(cron = "0 3,13 * * * *") at 3am and 13 pm
-    //(cron = "0/30 * * * * ?")
-
 
     @Scheduled(cron = "0 3,13 * * * *") //at 3am and 13 pm
     public void process() {
@@ -41,7 +37,7 @@ public class RiskProcessor {
         var teachers = teacherRepository.findAll();
 
         checkForUnfilledGroups(groups);
-        checkForManyGroupsSameTime(teachers);
+        checkForManyGroupsSameTime(groups);
         checkForTeachersOverload(teachers);
     }
 
@@ -59,24 +55,48 @@ public class RiskProcessor {
         }
     }
 
-    private void checkForManyGroupsSameTime(List<TeacherEntity> teachers) {
-        for (TeacherEntity teacher : teachers) {
-            var groupsByTeacher = groupRepository.getByTeacherIds(List.of(teacher.getId()));
+    private void checkForManyGroupsSameTime(List<GroupEntity> groups) {
 
-            Map<String, List<GroupEntity>> groupsByDayOfWeekTime = groupsByTeacher
-                    .stream()
-                    .collect(Collectors.groupingBy(el -> el.getTime() + el.getDayOfWeek()));
+        Map<String, List<UUID>> groupsByPartOfDay = new HashMap<>();
 
-            for(Map.Entry<String, List<GroupEntity>> entry : groupsByDayOfWeekTime.entrySet()) {
-                if (entry.getValue().size() > 1) {
-                    var value = entry.getValue().getFirst();
-                    var comment = teacher.getSurname() + " " + teacher.getName() + " уже ведет занятия в " + value.getDayOfWeek() + " " + value.getTime();
-                    entry.getValue().forEach(group -> saveRisk(group.getId(), TEACHER_DAY_TIME_CONFLICT_REASON, comment, null));
-                } else {
-                    entry.getValue().forEach(group -> deleteRisk(group.getId(), TEACHER_DAY_TIME_CONFLICT_REASON, null));
-                }
+        groupsByPartOfDay.put("Понедельник первая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Понедельник вторая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Вторник первая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Вторник вторая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Среда первая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Среда вторая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Четверг первая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Четверг вторая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Пятница первая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Пятница вторая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Суббота первая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Суббота вторая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Воскресенье первая половина дня", new ArrayList<>());
+        groupsByPartOfDay.put("Воскресенье вторая половина дня", new ArrayList<>());
+
+        for(GroupEntity group : groups) {
+            if (group.getId().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+                continue;
+            }
+            var mapKey = group.getDayOfWeek() + " " + extractPartOfDay(group.getTime());
+            var array = groupsByPartOfDay.get(mapKey);
+            array.add(group.getId());
+        }
+
+        for(Map.Entry<String, List<UUID>> entry : groupsByPartOfDay.entrySet()) {
+            var groupsIds = entry.getValue();
+            if ((double) groupsIds.size() > (double) groups.size() / 4) {
+                var comment = "Много групп ведут занятия в " + entry.getKey();
+                groupsIds.forEach(groupId -> saveRisk(groupId, SAME_TIME_GROUPS_REASON, comment, null));
+            } else {
+                groupsIds.forEach(groupId -> deleteRisk(groupId, SAME_TIME_GROUPS_REASON, null));
             }
         }
+    }
+
+    private String extractPartOfDay(String groupTime) {
+        var hours = Integer.parseInt(groupTime.substring(0, 2));
+        return hours < 13 ? "первая половина дня" : "вторая половина дня";
     }
 
     private void checkForTeachersOverload(List<TeacherEntity> teachers) {
