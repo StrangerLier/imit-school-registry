@@ -83,7 +83,7 @@ public class AdminController {
     @GetMapping("/admin/recommendations")
     public RecommendationRestResponse removeHolidays()
     {
-        // sosal?
+        // sosal? da
         return recommendationManager.createRecommendation();
     }
 }
