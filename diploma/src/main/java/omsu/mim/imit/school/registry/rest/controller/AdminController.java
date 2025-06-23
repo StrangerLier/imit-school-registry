@@ -75,14 +75,12 @@ public class AdminController {
     }
 
     @DeleteMapping("/admin/removeHolidays")
-    public void removeHolidays(@RequestParam String[] holidaysIds)
-    {
+    public void removeHolidays(@RequestParam String[] holidaysIds) {
         adminService.removeHolidays(holidaysIds);
     }
 
     @GetMapping("/admin/recommendations")
-    public RecommendationRestResponse removeHolidays()
-    {
+    public RecommendationRestResponse removeHolidays() {
         return recommendationManager.createRecommendation();
     }
 }
